@@ -22,7 +22,7 @@ class Enemies
 
         void placeEnemy(int,int);           // place enemy
         void drawEnemy();                   // Draw Enemy with Animation
-        void moveEnemy(string);             // move Enemy left,right,up,down
+        void moveEnemy(string, vectorstuff);             // move Enemy left,right,up,down
         void animate();                     // Animate sprite
         GridLoc getEnemyLoc();              // Return Enemy current grid location
         bool getIsObjectActing();
@@ -36,6 +36,7 @@ class Enemies
         int enemyloctracky[2]{};
         void enemyupdatepos(int, int);
         void updateEnemyVecPos(vectorstuff, int, int);
+        void updateenemyvecref(vectorstuff, int, int, int, int, char);
 
 		GridLoc getObjCurrGridLoc();
         GridLoc getObjNewGridLoc();

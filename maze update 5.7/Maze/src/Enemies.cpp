@@ -99,13 +99,13 @@ void Enemies::placeEnemy(int x, int y)
     setObjCurrRealLoc(enmLoc);
 }
 
-void Enemies::moveEnemy(string dir)
+void Enemies::moveEnemy(string dir, vectorstuff dan)
 {
   if(moveDis<=0){
-   if(dir=="up"){up=true; down=left=right=false;}
-   else if(dir=="down"){down=true; up=left=right=false;}
-   else if(dir=="left"){left=true; down=up=right=false;}
-   else if(dir=="right"){right=true; down=left=up=false;}
+   if(dir=="up"){up=true; down=left=right=false;updateEnemyVecPos(dan, enmLoc.x, enmLoc.y + 1);}
+   else if(dir=="down"){down=true; up=left=right=false;updateEnemyVecPos(dan, enmLoc.x, enmLoc.y - 1);}
+   else if(dir=="left"){left=true; down=up=right=false;updateEnemyVecPos(dan, enmLoc.x - 1, enmLoc.y);}
+   else if(dir=="right"){right=true; down=left=up=false;updateEnemyVecPos(dan, enmLoc.x + 1, enmLoc.y);}
    else{up=left=right=false;}
     }
 }
@@ -222,8 +222,10 @@ void Enemies::updateEnemyVecPos(vectorstuff foo, int a, int b){
     if (enemyloctracky[0] != enemyloctracky[1]){
             swap(enemyloctracky[0], enemyloctracky[1]);
          }
-    //cout << a << " " << b << endl;
-    //cout << enemyloctrackx[0] << " " << enemyloctrackx[1] << " " << enemyloctracky[0] << " " << enemyloctracky[1] << endl;
+    if((enemyloctrackx[0] != enemyloctrackx[1]) || (enemyloctracky[0] != enemyloctracky[1])){
+        updateenemyvecref(foo, enemyloctrackx[1], enemyloctracky[1], enemyloctrackx[0], enemyloctracky[0], 'E');
+    }
+
 
 
 }
@@ -233,6 +235,18 @@ void Enemies::enemyupdatepos(int x, int y){//AS this will update position 0 to t
          enemyloctrackx[1] = getEnemyLoc().x;
          enemyloctracky[0] = getEnemyLoc().y;
          enemyloctracky[1] = getEnemyLoc().y;
+}
+
+void Enemies::updateenemyvecref(vectorstuff temp, int old_x, int old_y, int new_x, int new_y, char type){
+    //temp.updateVecref(old_x, old_y, '_');
+    units temp1;
+    temp1.set_unit(old_x,old_y,'_');
+    units temp2;
+    temp2.set_unit(new_x,new_y, type);
+    temp.mastervec[old_x][old_y] = temp1;
+    temp.mastervec[new_x][new_y] = temp2;
+
+
 }
 
 void Enemies::objectAction(vectorstuff bash, units curenemypos, vector<units> playerpos)
@@ -287,19 +301,19 @@ void Enemies::objectAction(vectorstuff bash, units curenemypos, vector<units> pl
         {
             case 0:
                 //if (objectDirectionFaced != 3)  //to change direction facing without moving
-                moveEnemy("right");
+                moveEnemy("right", bash);
                 objectGenericCounter++;
                 break;
             case 1:
-                moveEnemy("up");
+                moveEnemy("up", bash);
                 objectGenericCounter++;
                 break;
             case 2:
-                moveEnemy("left");
+                moveEnemy("left", bash);
                 objectGenericCounter++;
                 break;
             case 3:
-                moveEnemy("down");
+                moveEnemy("down", bash);
                 objectGenericCounter++;
                 break;
         }
