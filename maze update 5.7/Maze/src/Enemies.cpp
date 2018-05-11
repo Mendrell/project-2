@@ -283,51 +283,33 @@ void Enemies::objectAction(vectorstuff bash, units curenemypos, vector<units> pl
     setObjOldRealLoc(getObjNewRealLoc()); //in case it needs to be reverted to
     if (canObjectAct)
     {
-        //setObjOldGridLoc(getEnemyLoc()); //store old location
-        //setObjOldRealLoc(enmLoc); //in case it needs to be reverted to
-
-        //canObjectAct = false;
-        enemyai moveai;
-        /*
-        units themove = moveai.returnSolution(bash.mastervec, curenemypos, playerpos);
-        cout << "Enemy current location: x."<< getEnemyLoc().x << "   y." <<getEnemyLoc().y << endl;
-        cout << "The AI move: x."<< themove.x << "   y." << themove.y << endl << endl;
-        cout << "front of solution que: "<< moveai.solutionQueue.front().x << "   " << moveai.solutionQueue.front().y;
-        */
-
-        units themove;
-        //themove.set_unit(0, 0 '0');
-        themove.set_unit(0, 0, '0');
-
-        if(getEnemyLoc().x == themove.x){
-            objectGenericCounter = 2;
-            /*
-            if(getEnemyLoc().y == themove.y + 1){
-                cout << "Enemy moved up." << endl;
-                objectGenericCounter = 1;
-            }
-            else if(getEnemyLoc().y == themove.y - 1){
-                cout << "Enemy moved down." << endl;
-                objectGenericCounter = 3;
-            }
-        }
-
-        else if(getEnemyLoc().y == themove.y){
-            if(getEnemyLoc().x == themove.x + 1){
-                cout << "Enemy moved right." << endl;
-                objectGenericCounter = 0;
-            }
-            else if(getEnemyLoc().x == themove.x - 1){
-                cout << "Enemy moved left." << endl;
-                objectGenericCounter = 2;
-            }
-            */
-        }
+        string tempStrMove;
+        queue < string > tempQueueMove;
+        getObjTravelPath(tempQueueMove);
+        if (!tempQueueMove.empty())
+            tempStrMove = tempQueueMove.front();
         else
-            //cout << "something is not working right";
+            tempStrMove = "stay";
+        if (tempStrMove == "right")
+        {
+            objectGenericCounter = 0;
+        }
+        else if (tempStrMove == "up")
+        {
+            objectGenericCounter = 1;
+        }
+        else if (tempStrMove == "left")
+        {
             objectGenericCounter = 2;
-
-        //cout << "start " << getEnemyLoc().x << " " << getEnemyLoc().y << endl;
+        }
+        else if (tempStrMove == "down")
+        {
+            objectGenericCounter = 3;
+        }
+        else if (tempStrMove == "stay")
+        {
+            objectGenericCounter = 4;
+        }
 
         loc tempLoc00;
         switch (objectGenericCounter)
@@ -338,38 +320,35 @@ void Enemies::objectAction(vectorstuff bash, units curenemypos, vector<units> pl
                 tempLoc00 = getObjCurrRealLoc();
                 tempLoc00.x += unitWidth;
                 setObjNewRealLoc(tempLoc00);
-                objectGenericCounter++;
+
                 break;
             case 1:
                 moveEnemy("up");
                 tempLoc00 = getObjCurrRealLoc();
                 tempLoc00.y += unitWidth;
                 setObjNewRealLoc(tempLoc00);
-                objectGenericCounter++;
+
                 break;
             case 2:
                 moveEnemy("left");
                 tempLoc00 = getObjCurrRealLoc();
                 tempLoc00.x -= unitWidth;
                 setObjNewRealLoc(tempLoc00);
-                objectGenericCounter++;
+
                 break;
             case 3:
                 moveEnemy("down");
                 tempLoc00 = getObjCurrRealLoc();
-                tempLoc00.x -= unitWidth;
+                tempLoc00.y -= unitWidth;
                 setObjNewRealLoc(tempLoc00);
-                objectGenericCounter++;
+
+                break;
+            case 4:
+                break;
+            default:
+                cout << "error in enemy action" << endl;
                 break;
         }
-
-        //cout << "end " << getEnemyLoc().x << " " << getEnemyLoc().y << endl;
-        //objectGenericCounter++;
-
-        //store the current locations
-        //setObjCurrRealLoc(enmLoc);
-        //setObjCurrGridLoc(getEnemyLoc());
-
 
     }
     //setObjCurrRealLoc(enmLoc);
@@ -384,7 +363,11 @@ void Enemies::objectLogicAction(bool isBlockCollision)
     {
         if (!isBlockCollision)
         {
-
+            queue < string > tempQueueMove;
+            getObjTravelPath(tempQueueMove);
+            if (!tempQueueMove.empty())
+                tempQueueMove.pop();
+            setObjTravelPath(tempQueueMove);
         }
         else
         {
@@ -483,3 +466,14 @@ GridLoc Enemies::realToGrid(loc inpRealLoc)
 
     return val;
 }
+
+void Enemies::getObjTravelPath(queue<string>& retPath)
+{
+    retPath = objTravelPath;
+}
+
+void Enemies::setObjTravelPath(queue<string>inpPath)
+{
+    objTravelPath = inpPath;
+}
+

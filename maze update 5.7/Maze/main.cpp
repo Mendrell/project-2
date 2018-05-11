@@ -46,6 +46,8 @@ const int GWALLLIMIT = 100;
 void updatepos(int x, int y);//AS this will update position 0 to the current position of the player
 void checkwallcollision();
 
+void pathFindToPlayer(GridLoc startPos, queue <string> &retPath);
+
 Maze *M = new Maze();                         // Set Maze grid size
 //Maze *M = new Maze(15);                         // Set Maze grid size
 Player *P = new Player();                       // create player
@@ -563,6 +565,13 @@ int Print(int Array[]){
 
     for (int i = 0; i < E->size(); i++)
     {
+        queue < string > tempEnemyPath;
+
+        if (canTakeAction)
+        {
+            pathFindToPlayer(E->at(i).getObjNewGridLoc(), tempEnemyPath);
+            E->at(i).setObjTravelPath(tempEnemyPath);
+        }
 
         E->at(i).objectAction(vecref, vecref.getvecpos(E->at(i).getEnemyLoc().x, E->at(i).getEnemyLoc().y), morty);
 
@@ -743,4 +752,16 @@ int main(int argc, char *argv[])
    glutMainLoop();
 
    return EXIT_SUCCESS;
+}
+
+void pathFindToPlayer(GridLoc startPos, queue <string> &retPath)
+{
+    //utilityFunctions uFunc;
+    queue <GridLoc> tempGLPath;
+    queue <string> tempStrPath;
+
+    vecref.pathFinding(startPos, P->getObjCurrGridLoc(), tempGLPath);
+    vecref.convertQueueGLtoString(tempGLPath, tempStrPath);
+
+    retPath = tempStrPath;
 }
