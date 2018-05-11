@@ -8,13 +8,15 @@ extern "C" {
 #include <stdint.h>
 }
 
+using namespace std;
+
 //using namespace std;
 
 class templateFunctions
 {
     public:
-        templateFunctions();
-        ~templateFunctions();
+        //templateFunctions();
+        //~templateFunctions();
 
         template <class T, class U>
         bool collisionObjectToObject(T *inpObj1, U *inpObj2);
@@ -37,7 +39,29 @@ class templateFunctions
         template <class T>
         void removeArrayElement(T inpArr[], int inpIndex, int inpLength);
 
+        template <class T>
+        bool isInQueue(queue <T> inpQueue, T inpElement);
 
+        template <class T>
+        bool isInPriorityQueue(priority_queue <T> inpQueue, T inpElement);
+
+        template <class T>
+        void display1DVec(vector <T> inpVector, string inpDelim = "");
+
+        template <class T>
+        void display2DVec(vector < vector <T> > inpVector, string inpDelim = "");
+
+        template <class T>
+        T getMapElement(vector < vector <T> > inpVector, int inpX, int inpY);
+
+        template <class T>
+        void display1DQueue(queue <T> inpQueue, string inpDelim = "");
+
+        template <class T>
+        void display1DPriorQueue(priority_queue <T> inpQueue, string inpDelim = "");
+
+        template <class T>
+        void removeVectorElement(vector <T> &retVec, int inpIndex);
 
     protected:
 

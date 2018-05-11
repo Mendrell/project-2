@@ -476,3 +476,23 @@ void Player::setObjOldRealLoc(loc inpRealLoc)
 {
     objOldRealLoc = inpRealLoc;
 }
+
+bool Player::getIsObjDead()
+{
+    return !livePlayer;
+}
+
+void Player::setIsObjDead(bool inpBool)
+{
+    livePlayer = !inpBool;
+}
+
+bool Player::getIsProjDead()
+{
+    return !arrowStatus;
+}
+
+void Player::setIsProjDead(bool inpBool)
+{
+    arrowStatus = !inpBool;
+}

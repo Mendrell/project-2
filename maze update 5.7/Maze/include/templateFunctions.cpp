@@ -70,3 +70,117 @@ void templateFunctions::removeArrayElement(T inpArr[], int inpIndex, int inpLeng
         inpArr[i-1] = inpArr[i];
     }
 }
+
+template <class T>
+bool templateFunctions::isInQueue(queue <T> inpQueue, T inpElement)
+{
+	bool found;
+
+	found = false;
+	while (!inpQueue.empty() && !found)
+	{
+		if (inpQueue.front() == inpElement)
+		{
+			found = true;
+		}
+		inpQueue.pop();
+	}
+
+	return found;
+}
+
+template <class T>
+bool templateFunctions::isInPriorityQueue(priority_queue <T> inpQueue, T inpElement)
+{
+	bool found;
+
+	found = false;
+	while (!inpQueue.empty() && !found)
+	{
+		if (inpQueue.top() == inpElement)
+		{
+			found = true;
+		}
+		inpQueue.pop();
+	}
+
+	return found;
+}
+
+
+template <class T>
+void templateFunctions::display1DVec(vector <T> inpVector, string inpDelim)
+{
+	for (int i = 0; i < inpVector.size(); i++)
+	{
+		cout << inpVector.at(i) << inpDelim;
+	}
+	cout << endl;
+}
+
+template <class T>
+void templateFunctions::display2DVec(vector < vector <T> > inpVector, string inpDelim)
+{
+	for (int i = 0; i < inpVector.size(); i++)
+	{
+		display1DVec(inpVector.at(i), inpDelim);
+	}
+}
+
+
+template <class T>
+T templateFunctions::getMapElement(vector < vector <T> > inpVector, int inpX, int inpY)
+{
+	T retElement;
+	if (inpY < inpVector.size() && inpY >= 0)
+	{
+		if (inpX < inpVector.at(inpY).size() && inpX >= 0)
+		{
+			retElement = inpVector.at(inpY).at(inpX);
+		}
+		else
+			cout << "getMapElement error" << endl;
+	}
+	else
+			cout << "getMapElement error" << endl;
+	return retElement;
+}
+
+
+template <class T>
+void templateFunctions::display1DQueue(queue <T> inpQueue, string inpDelim)
+{
+	while (!inpQueue.empty())
+	{
+		cout << inpQueue.front() << inpDelim;
+		inpQueue.pop();
+	}
+	cout << endl;
+}
+
+
+template <class T>
+void templateFunctions::display1DPriorQueue(priority_queue <T> inpQueue, string inpDelim)
+{
+	while (!inpQueue.empty())
+	{
+		cout << inpQueue.top() << inpDelim;
+		inpQueue.pop();
+	}
+	cout << endl;
+}
+
+
+template <class T>
+void templateFunctions::removeVectorElement(vector <T> &retVec, int inpIndex)
+{
+    vector <T> tempVec;
+    tempVec = retVec;
+    if (inpIndex < tempVec.size())
+    {
+        tempVec.erase(tempVec.begin() + inpIndex);
+    }
+
+
+    retVec = tempVec;
+}
