@@ -8,9 +8,8 @@
 #include <Timer.h>
 #include <enemyai.h>
 
+
 using namespace std;
-
-
 
 //Timer *T1 = new Timer();                             // Set Timer for animation
 Enemies::Enemies()
@@ -105,6 +104,58 @@ void Enemies::placeEnemy(int x, int y)
     setObjOldRealLoc(getObjCurrRealLoc());
     setObjNewGridLoc(getObjCurrGridLoc());
     setObjNewRealLoc(getObjCurrRealLoc());
+}
+
+
+
+void Enemies::updateEnemyVecPos(vectorstuff foo, int a, int b){
+    /*if((enemyloctrackx[0] != enemyloctrackx[1]) || (enemyloctracky[0] != enemyloctracky[1])){
+
+    }*/
+    enemyloctrackx[1] = a;
+    enemyloctracky[1] = b;
+    int temp1, temp2, temp3, temp4;
+
+    if (enemyloctrackx[0] != enemyloctrackx[1]){
+
+            swap(enemyloctrackx[0], enemyloctrackx[1]);
+         }
+    if (enemyloctracky[0] != enemyloctracky[1]){
+            swap(enemyloctracky[0], enemyloctracky[1]);
+         }
+    if((enemyloctrackx[0] != enemyloctrackx[1]) || (enemyloctracky[0] != enemyloctracky[1])){
+        updateenemyvecref(foo, enemyloctrackx[1], enemyloctracky[1], enemyloctrackx[0], enemyloctracky[0], 'E');
+    }
+
+
+
+}
+
+void Enemies::enemyupdatepos(int x, int y){//AS this will update position 0 to the current position of the player
+         enemyloctrackx[0] = getEnemyLoc().x;
+         enemyloctrackx[1] = getEnemyLoc().x;
+         enemyloctrackxbar[0]= getEnemyLoc().x;
+         enemyloctracky[0] = getEnemyLoc().y;
+         enemyloctracky[1] = getEnemyLoc().y;
+         enemyloctrackybar[0]= getEnemyLoc().x;
+}
+
+void Enemies::updateenemyvecref(vectorstuff temp, int old_x, int old_y, int new_x, int new_y, char type){
+    //temp.updateVecref(old_x, old_y, '_');
+   // cout << "almost there \n";
+    //system("pause");
+    units temp1;
+    temp1.set_unit(old_x,old_y,'_');
+    units temp2;
+    temp2.set_unit(new_x,new_y, type);
+    temp.temp1 = temp1;
+    temp.temp2 = temp2;
+
+
+    //temp.mastervec[old_x][old_y] = temp1;
+    //temp.mastervec[new_x][new_y] = temp2;
+
+
 }
 
 void Enemies::moveEnemy(string dir)
@@ -222,30 +273,7 @@ bool Enemies::getIsObjectActing()
     return isObjectActing;
 }
 
-void Enemies::updateEnemyVecPos(vectorstuff foo, int a, int b){
-    /*if((enemyloctrackx[0] != enemyloctrackx[1]) || (enemyloctracky[0] != enemyloctracky[1])){
 
-    }*/
-    enemyloctrackx[1] = a;
-    enemyloctracky[1] = b;
-    if (enemyloctrackx[0] != enemyloctrackx[1]){
-            swap(enemyloctrackx[0], enemyloctrackx[1]);
-         }
-    if (enemyloctracky[0] != enemyloctracky[1]){
-            swap(enemyloctracky[0], enemyloctracky[1]);
-         }
-    //cout << a << " " << b << endl;
-    //cout << enemyloctrackx[0] << " " << enemyloctrackx[1] << " " << enemyloctracky[0] << " " << enemyloctracky[1] << endl;
-
-
-}
-
-void Enemies::enemyupdatepos(int x, int y){//AS this will update position 0 to the current position of the player
-         enemyloctrackx[0] = getEnemyLoc().x;
-         enemyloctrackx[1] = getEnemyLoc().x;
-         enemyloctracky[0] = getEnemyLoc().y;
-         enemyloctracky[1] = getEnemyLoc().y;
-}
 
 void Enemies::objectAction(vectorstuff bash, units curenemypos, vector<units> playerpos)
 {

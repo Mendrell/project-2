@@ -19,6 +19,19 @@ class vectorstuff
         }
 
         vector<vector <units> > mastervec;
+        units temp1;//old
+        units temp2;//new
+        bool bs = false;
+        int test;
+
+         void crap(){
+            mastervec[temp1.x][temp1.y] = temp1;
+            mastervec[temp2.x][temp2.y] = temp2;
+            bs = false;
+
+        }
+
+
         void updateVecref(int x, int y, char c)//sets new values to the vector given coordinates and a character
             {
                 units temp;

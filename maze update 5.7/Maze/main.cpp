@@ -112,7 +112,16 @@ void updateenemyvecmain(){//AS i dont know why but this function has to be passe
             vecref.updateVecref(E->at(i).enemyloctrackx[1], E->at(i).enemyloctracky[1], '_');
             vecref.updateVecref(E->at(i).enemyloctrackx[0], E->at(i).enemyloctracky[0], 'E');
 
+/*void updateenemyvecmain(){//AS i dont know why but this function has to be passed in main or it wont work
+    for(int i = 0; i < enemycount; i++){
+            int curx = E[i].getEnemyLoc().x;
+            int cury = E[i].getEnemyLoc().y;
+            E[i].updateEnemyVecPos(vecref, curx, cury);
+            vecref.updateVecref(E[i].enemyloctrackx[1], E[i].enemyloctracky[1], '_');
+            vecref.updateVecref(E[i].enemyloctrackx[0], E[i].enemyloctracky[0], 'E');
+*/
         }
+
 }
 vector<units> perimeter;
 void checkperim(units bin){//Dhanyu may be giving us a better check condition for the player still may need to do this for the enemy
@@ -448,22 +457,61 @@ int Print(int Array[]){
     if (keysPressed.moveUp)
     {
 
+        /*
+         if((loctrackx[0] != loctrackx[1]) || (loctracky[0] != loctracky[1])){//makes it so that the enemy only moves when the player enter a new square
+            vecref.updateVecref(loctrackx[1], loctracky[1], '_');//updates the vecref in real time
+            vecref.updateVecref(loctrackx[0], loctracky[0], 'P');
+        }
+        //updateenemyvecmain();//there may be a better place to put this
+        */
         keysPressed.moveUp = false;
     }
     if (keysPressed.moveDown)
     {
+        /*
+        //if(P->playerCollision(3,3))break;
+         checkwallcollision();
+         //updatepos(P->getPlayerLoc().x, P->getPlayerLoc().y);
+         //displayloctrack();
 
+         if((loctrackx[0] != loctrackx[1]) || (loctracky[0] != loctracky[1])){//makes it so that the enemy only moves when the player enter a new square
+            vecref.updateVecref(loctrackx[1], loctracky[1], '_');
+            vecref.updateVecref(loctrackx[0], loctracky[0], 'P');
+        }
+        //updateenemyvecmain();//there may be a better place to put this
+        */
         keysPressed.moveDown = false;
     }
     if (keysPressed.moveLeft)
     {
+        /*
+        //if(P->playerCollision(3,3))break;
+        checkwallcollision();
+        //updatepos(P->getPlayerLoc().x, P->getPlayerLoc().y);
+        //displayloctrack();
 
+        if((loctrackx[0] != loctrackx[1]) || (loctracky[0] != loctracky[1])){//makes it so that the enemy only moves when the player enter a new square
+        vecref.updateVecref(loctrackx[1], loctracky[1], '_');
+        vecref.updateVecref(loctrackx[0], loctracky[0], 'P');
+        }
+       //updateenemyvecmain();//there may be a better place to put this
+        */
         keysPressed.moveLeft = false;
     }
     if (keysPressed.moveRight)
     {
+        /*
+        //if(P->playerCollision(3,3))break;
+         checkwallcollision();
+         updatepos(P->getPlayerLoc().x, P->getPlayerLoc().y);
+         //displayloctrack();
 
-
+         if((loctrackx[0] != loctrackx[1]) || (loctracky[0] != loctracky[1])){//makes it so that the enemy only moves when the player enter a new square
+            vecref.updateVecref(loctrackx[1], loctracky[1], '_');
+            vecref.updateVecref(loctrackx[0], loctracky[0], 'P');
+        }
+        //updateenemyvecmain();//there may be a better place to put this
+        */
         keysPressed.moveRight = false;
     }
     if (keysPressed.shoot)
@@ -532,9 +580,10 @@ int Print(int Array[]){
     {
         //cout << "here01" << endl;
         cout << P->getObjCurrGridLoc().x << " " << P->getObjCurrGridLoc().y << endl;
-        vecref.display2DVec();
-    }
 
+    }
+    vecref.display2DVec();
+    system("cls");
     plyActs = {false, false, false, false, false};
     canTakeAction = false;
     actionInProgress = false;
