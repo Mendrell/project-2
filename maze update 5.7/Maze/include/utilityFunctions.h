@@ -17,6 +17,8 @@ class utilityFunctions
         bool isInGridBounds(gridSize inpGridSize, GridLoc inpGridLoc);
         void displayGLQueue(queue < GridLoc > inpQueue);
         void displayStrQueue(queue < string > inpQueue);
+        double calcUnitWidth(int inpGridSize);
+        GridLoc realToGrid(loc inpRealLoc, int inpGridSize);
 
     protected:
 

@@ -104,3 +104,13 @@ void wall::setObjOldGridLoc(GridLoc inpGridLoc)
 {
     objCurrGridLoc = inpGridLoc;
 }
+
+bool wall::getIsObjDead()
+{
+    return !liveWall;
+}
+
+void wall::setIsObjDead(bool inpBool)
+{
+    liveWall = !inpBool;
+}

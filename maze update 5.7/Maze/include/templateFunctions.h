@@ -67,6 +67,9 @@ class templateFunctions
         template <class T>
         void removeVectorElement(vector <T> &retVec, int inpIndex);
 
+        template <class T>
+        void removeVectorPointerElement(vector <T> *retVec, int inpIndex);
+
     protected:
 
     private:
