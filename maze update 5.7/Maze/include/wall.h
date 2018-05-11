@@ -32,7 +32,11 @@ class wall
 
             void setObjCurrGridLoc(GridLoc inpGridLoc);
             void setObjNewGridLoc(GridLoc inpGridLoc);
-            void setObjOldGridLoc(GridLoc inpGridLoc);							
+            void setObjOldGridLoc(GridLoc inpGridLoc);
+
+            bool getIsObjDead();
+            void setIsObjDead(bool inpBool);
+
             float unitWidth;               // unit width of the grid cell
             int gridSize;                  // grid size
 

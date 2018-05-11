@@ -35,6 +35,10 @@
 #include <vectorstuff.h>
 
 #include <utilityFunctions.h>
+
+#include <templateFunctions.h>
+#include <templateFunctions.cpp>
+
 /* GLUT callback Handlers */
 
 using namespace std;
@@ -47,6 +51,24 @@ void updatepos(int x, int y);//AS this will update position 0 to the current pos
 void checkwallcollision();
 
 void pathFindToPlayer(GridLoc startPos, queue <string> &retPath);
+
+void clearPlayerList();
+void clearEnemyList();
+void clearWallList();
+void clearProjectileList();
+
+void cleanPlayerList();
+void cleanEnemyList();
+void cleanWallList();
+void cleanProjectileList();
+
+void resetPlayerList();
+void resetEnemyList();
+void resetWallList();
+
+void clearMaze();
+void resetMaze();
+void resetPtrObjects();
 
 Maze *M = new Maze();                         // Set Maze grid size
 //Maze *M = new Maze(15);                         // Set Maze grid size
@@ -136,8 +158,13 @@ vector<units> morty(1);//all this vector does is hold the player position
 
 void init(int a)
 {
+    //resetPtrObjects();
+
     if(!gamestart){
     gamestart=1;
+
+    //resetPtrObjects();
+
     glEnable(GL_COLOR_MATERIAL);
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
     glShadeModel(GL_SMOOTH);
@@ -607,6 +634,24 @@ int Print(int Array[]){
          }
     }
 
+    if (!P->getIsProjDead())
+    {
+        if (vecref.getvecpos(P->getArrowLoc().x, P->getArrowLoc().y).print_unit() == '#')
+            P->setIsProjDead(true);
+
+        for (int i = 0; i < E->size(); i++)
+        {
+            if (utilFunc.isSameGridLoc(E->at(i).getObjNewGridLoc(), P->getArrowLoc()))
+            {
+                E->at(i).setIsObjDead(true);
+                P->setIsProjDead(true);
+
+                //vecref.updateVecref(P->getObjOldGridLoc().x, P->getObjOldGridLoc().y, '_');
+                //vecref.updateVecref(E->at(i).getObjOldGridLoc().x, E->at(i).getObjOldGridLoc().y, '_');
+            }
+        }
+    }
+
     if (canTakeAction)
     {
         //cout << "here01" << endl;
@@ -619,6 +664,12 @@ int Print(int Array[]){
     plyActs = {false, false, false, false, false};
     canTakeAction = false;
     actionInProgress = false;
+
+    cleanEnemyList();
+    cleanPlayerList();
+    cleanProjectileList();
+
+
     glutPostRedisplay();
 }
 
@@ -764,4 +815,116 @@ void pathFindToPlayer(GridLoc startPos, queue <string> &retPath)
     vecref.convertQueueGLtoString(tempGLPath, tempStrPath);
 
     retPath = tempStrPath;
+}
+
+void clearPlayerList()
+{
+    if (P != NULL)
+        delete P;
+    P = NULL;
+}
+
+void clearEnemyList()
+{
+    if (E != NULL)
+        delete E;
+    E = NULL;
+}
+
+void clearWallList()
+{
+    if (W != NULL)
+        delete W;
+    W = NULL;
+}
+
+void clearProjectileList()
+{
+    if(!P->getIsProjDead())
+        P->setIsProjDead(true);
+}
+
+void cleanPlayerList()
+{
+    if(P->getIsObjDead())
+    {
+        vecref.updateVecref(P->getObjCurrGridLoc().x, P->getObjCurrGridLoc().y, '_');
+        clearProjectileList();
+        clearPlayerList();
+        cout << "Player dead exit game" << endl;
+        //exit(0); //This is just a placeholder
+    }
+}
+
+void cleanEnemyList()
+{
+
+    templateFunctions tFunc;
+    for (int i = 0; i < E->size(); i++)
+    {
+        if (E->at(i).getIsObjDead())
+        {
+            vecref.updateVecref(E->at(i).getObjNewGridLoc().x, E->at(i).getObjNewGridLoc().y, '_');
+            tFunc.removeVectorPointerElement(E, i);
+            cout << E->size() << endl;
+        }
+    }
+}
+
+void cleanWallList()
+{
+    templateFunctions tFunc;
+    for (int i = 0; i < W->size(); i++)
+    {
+        if (W->at(i).getIsObjDead())
+        {
+            vecref.updateVecref(W->at(i).getObjCurrGridLoc().x, W->at(i).getObjCurrGridLoc().y, '_');
+            tFunc.removeVectorPointerElement(W, i);
+        }
+    }
+}
+
+void cleanProjectileList()
+{
+    if(P->getIsProjDead())
+        P->setIsProjDead(true);
+}
+
+void resetPlayerList()
+{
+    clearPlayerList();
+    P = new Player();
+}
+
+void resetEnemyList()
+{
+    clearEnemyList();
+    E = new vector < Enemies >();
+}
+
+void resetWallList()
+{
+    clearEnemyList();
+    W = new vector < wall >();
+}
+
+void clearMaze()
+{
+    if (M != NULL)
+        delete W;
+    M = NULL;
+}
+
+void resetMaze()
+{
+    clearMaze();
+    M = new Maze();
+}
+
+void resetPtrObjects()
+{
+    resetPlayerList();
+    resetEnemyList();
+    resetWallList();
+    resetMaze();
 }
