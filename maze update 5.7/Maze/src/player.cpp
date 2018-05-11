@@ -302,33 +302,38 @@ void Player::objectAction()
     {
         //canObjectAct = false;
         isObjectActing = true;
+        setObjOldRealLoc(getObjCurrRealLoc());
+        setObjOldGridLoc(getObjCurrGridLoc());
         if (classPlayerActions.moveUp && !classPlayerActions.moveDown)
         {
-			setObjOldRealLoc(getObjCurrRealLoc());
+			//setObjOldRealLoc(getObjCurrRealLoc());
+			//setObjOldGridLoc(getObjCurrGridLoc());
             movePlayer("up");
         }
         else if (classPlayerActions.moveDown && !classPlayerActions.moveUp)
         {
-            setObjOldRealLoc(getObjCurrRealLoc());
+            //setObjOldRealLoc(getObjCurrRealLoc());
             movePlayer("down");
         }
         else if (classPlayerActions.moveLeft && !classPlayerActions.moveRight)
         {
-			setObjOldRealLoc(getObjCurrRealLoc());
+			//setObjOldRealLoc(getObjCurrRealLoc());
             movePlayer("left");
         }
         else if (classPlayerActions.moveRight && !classPlayerActions.moveLeft)
         {
-            setObjOldRealLoc(getObjCurrRealLoc());
+            //setObjOldRealLoc(getObjCurrRealLoc());
             movePlayer("right");
         }
         else if (classPlayerActions.shoot)
         {
-            setObjOldRealLoc(getObjCurrRealLoc());
+            //setObjOldRealLoc(getObjCurrRealLoc());
             shootArrow();
         }
         //isObjectActing = false;
         //classPlayerActions = {false, false, false, false, false};
+        setObjCurrRealLoc(getObjCurrRealLoc());
+        setObjCurrGridLoc(getObjCurrGridLoc());
     }
 }
 
@@ -343,6 +348,7 @@ void Player::objectLogicAction(bool isBlockCollision)
         else
         {
             setObjCurrRealLoc(getObjOldRealLoc());
+            setObjCurrGridLoc(getObjOldGridLoc());
         }
 
         canObjectAct = false;

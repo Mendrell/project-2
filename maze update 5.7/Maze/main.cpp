@@ -449,6 +449,7 @@ int Print(int Array[]){
     if (keysPressed.moveUp)
     {
         //if(P->playerCollision(3,3))break;
+        /*
          updatepos(P->getPlayerLoc().x, P->getPlayerLoc().y);
          //displayloctrack();
 
@@ -456,13 +457,15 @@ int Print(int Array[]){
             vecref.updateVecref(loctrackx[1], loctracky[1], '_');//updates the vecref in real time
             vecref.updateVecref(loctrackx[0], loctracky[0], 'P');
         }
-        updateenemyvecmain();//there may be a better place to put this
+        */
+        //updateenemyvecmain();//there may be a better place to put this
         keysPressed.moveUp = false;
     }
     if (keysPressed.moveDown)
     {
         //if(P->playerCollision(3,3))break;
-         checkwallcollision();
+         //checkwallcollision();
+         /*
          updatepos(P->getPlayerLoc().x, P->getPlayerLoc().y);
          //displayloctrack();
 
@@ -470,14 +473,16 @@ int Print(int Array[]){
             vecref.updateVecref(loctrackx[1], loctracky[1], '_');
             vecref.updateVecref(loctrackx[0], loctracky[0], 'P');
         }
-        updateenemyvecmain();//there may be a better place to put this
+        */
+        //updateenemyvecmain();//there may be a better place to put this
 
         keysPressed.moveDown = false;
     }
     if (keysPressed.moveLeft)
     {
         //if(P->playerCollision(3,3))break;
-        checkwallcollision();
+        //checkwallcollision();
+        /*
         updatepos(P->getPlayerLoc().x, P->getPlayerLoc().y);
         //displayloctrack();
 
@@ -485,14 +490,15 @@ int Print(int Array[]){
         vecref.updateVecref(loctrackx[1], loctracky[1], '_');
         vecref.updateVecref(loctrackx[0], loctracky[0], 'P');
         }
-        updateenemyvecmain();//there may be a better place to put this
-
+        //updateenemyvecmain();//there may be a better place to put this
+        */
         keysPressed.moveLeft = false;
     }
     if (keysPressed.moveRight)
     {
         //if(P->playerCollision(3,3))break;
-         checkwallcollision();
+         //checkwallcollision();
+         /*
          updatepos(P->getPlayerLoc().x, P->getPlayerLoc().y);
          //displayloctrack();
 
@@ -500,7 +506,8 @@ int Print(int Array[]){
             vecref.updateVecref(loctrackx[1], loctracky[1], '_');
             vecref.updateVecref(loctrackx[0], loctracky[0], 'P');
         }
-        updateenemyvecmain();//there may be a better place to put this
+        //updateenemyvecmain();//there may be a better place to put this
+        */
 
         keysPressed.moveRight = false;
     }
@@ -515,12 +522,14 @@ int Print(int Array[]){
 
 		//cout << P->getObjCurrGridLoc().x << " " << P->getObjCurrGridLoc().y << endl;
 		//vecref.display2DVec();
+		/*
         if((loctrackx[0] != loctrackx[1]) || (loctracky[0] != loctracky[1])){//makes it so that the enemy only moves when the player enter a new square
             for (int i = 0; i < GENEMYLIMIT; i++)
             {
                      E[i].setActionStatus(canTakeAction);
             }
         }
+        */
 
     }
     P->objectAction();
@@ -534,18 +543,41 @@ int Print(int Array[]){
 
     P->objectLogicAction(tempBool00);
 
+    //if (canTakeAction)
+     {
+         //vecref.updateVecref(P->getObjOldGridLoc().x, P->getObjOldGridLoc().y, '_');
+         //vecref.updateVecref(P->getObjCurrGridLoc().x, P->getObjCurrGridLoc().y, 'P');
+     }
+
+    //P->getObjCurrGridLoc(), P->getObjOldGridLoc()
+    if(!utilFunc.isSameGridLoc(P->getObjCurrGridLoc(), P->getObjOldGridLoc())){//makes it so that the enemy only moves when the player enter a new square
+            for (int i = 0; i < GENEMYLIMIT; i++)
+            {
+                     E[i].setActionStatus(canTakeAction);
+            }
+    }
+
     for (int i = 0; i < enemycount; i++)
     {
         //cout << "something029" << endl;
         E[i].objectAction(vecref, vecref.getvecpos(E[i].getEnemyLoc().x, E[i].getEnemyLoc().y), morty);
         //(E[i].getObjOldGridLoc().x, E[i].getObjOldGridLoc().y, '_');
-         vecref.updateVecref(E[i].getObjOldGridLoc().x, E[i].getObjOldGridLoc().y, '_');
-         vecref.updateVecref(E[i].getEnemyLoc().x, E[i].getEnemyLoc().y, 'E');
          E[i].objectLogicAction(false);
 
+         if (canTakeAction)
+         {
+             cout << E[i].getObjOldGridLoc().x << " " << E[i].getObjOldGridLoc().y << endl;
+             cout << E[i].getObjCurrGridLoc().x << " " << E[i].getObjCurrGridLoc().y << endl;
+         }
+
+         if (canTakeAction)
+         {
+             vecref.updateVecref(E[i].getObjOldGridLoc().x, E[i].getObjOldGridLoc().y, '_');
+             vecref.updateVecref(E[i].getObjCurrGridLoc().x, E[i].getObjCurrGridLoc().y, 'E');
+         }
     }
 
-    updateenemyvecmain();
+    //updateenemyvecmain();
 
     if (canTakeAction)
     {

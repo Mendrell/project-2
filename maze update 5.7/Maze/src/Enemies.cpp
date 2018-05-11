@@ -323,7 +323,7 @@ void Enemies::objectLogicAction(bool isBlockCollision)
         }
         else
         {
-            setObjCurrRealLoc(getObjOldRealLoc());
+            //setObjCurrRealLoc(getObjOldRealLoc());
         }
 
         canObjectAct = false;
