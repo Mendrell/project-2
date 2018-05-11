@@ -1,0 +1,276 @@
+/*
+ * MAZE Game Framework
+ * Written by Dr. Dhanyu Amarasinghe Spring 2018
+ */
+
+#include <Enemies.h>
+#include <iostream>
+#include <Timer.h>
+
+using namespace std;
+
+
+
+//Timer *T1 = new Timer();                             // Set Timer for animation
+Enemies::Enemies()
+{
+    //ctor
+    enmLoc.x=0;
+    enmLoc.y=0;
+
+    xmax =1;
+    ymax =0.25;
+    xmin =0;
+    ymin =0;
+    up= down = left=right=false;
+    live = true;
+
+    objectTimer = new Timer();
+    objectDirectionFaced = 6;
+    canObjectAct = false;
+    isObjectActing = false;
+
+    objectGenericCounter = 0;
+    needDirectionChange = false;
+
+}
+
+Enemies::~Enemies()
+{
+    //dtor
+    delete objectTimer;
+}
+
+void Enemies::initEnm(int grid,int numFrames, char * FileName)
+{
+    gridSize = grid;
+    frames = numFrames;
+    xmax =1/(float)frames;
+    objectTimer->Start();
+    t = (float)(2.0/grid)/frames;
+    unitWidth = (float)2.0/gridSize;
+    enmTex = TextureLoader(FileName);
+}
+
+
+void Enemies::drawEnemy()
+{
+    glColor3f(1.0,1.0,1.0);
+    glBindTexture(GL_TEXTURE_2D,enmTex);
+
+
+    glPushMatrix();
+    if(!needDirectionChange)
+        animate();
+    else
+    {
+
+    }
+    glTranslatef(enmLoc.x,enmLoc.y,0.0);
+
+    glScaled(1.0/(float)gridSize,1.0/(float)gridSize,1);
+
+    glBegin(GL_POLYGON);
+        glTexCoord2f(xmin,ymin);
+        glVertex3f(1,1,0.0f);
+
+        glTexCoord2f(xmax,ymin);
+        glVertex3f(-1,1,0.0f);
+
+        glTexCoord2f(xmax,ymax);
+        glVertex3f(-1,-1,0.0f);
+
+        glTexCoord2f(xmin,ymax);
+        glVertex3f(1,-1,0.0f);
+     glEnd();
+     glPopMatrix();
+}
+
+void Enemies::placeEnemy(int x, int y)
+{
+    unitWidth = 2.0/gridSize;
+    x+=1;
+    y+=1;
+    enmLoc.x =  -1-unitWidth/2+(unitWidth)*x;
+    enmLoc.y =  -1-unitWidth/2+(unitWidth)*y;
+}
+
+void Enemies::moveEnemy(string dir)
+{
+  if(moveDis<=0){
+   if(dir=="up"){up=true; down=left=right=false;}
+   else if(dir=="down"){down=true; up=left=right=false;}
+   else if(dir=="left"){left=true; down=up=right=false;}
+   else if(dir=="right"){right=true; down=left=up=false;}
+   else{up=left=right=false;}
+    }
+}
+
+void Enemies::animate()
+{
+
+if(moveDis < unitWidth)
+{
+
+if(objectTimer->GetTicks()<1000)
+   {
+
+if(up)
+   {
+       if(enmLoc.y< 1-unitWidth/2)
+        {
+            enmLoc.y += t;
+         }   moveDis +=t;
+
+        xmin +=1/(float)frames;
+        xmax +=1/(float)frames;
+        ymin =0.0;
+        ymax =0.25;
+        if(xmax>1){
+                xmax =1/(float)frames;
+                xmin =0;
+            }
+    }
+
+  else if(down)
+   {
+         if(enmLoc.y > -1+unitWidth/2)
+           {
+              enmLoc.y -= t;
+           }  moveDis +=t;
+
+            xmin +=1/(float)frames;
+            xmax +=1/(float)frames;
+            ymin =0.25;
+            ymax =0.5;
+
+            if(xmax>1){
+                xmax =1/(float)frames;
+                xmin =0;
+            }
+
+   }
+   else if(left)
+   {
+       if(enmLoc.x>-1+unitWidth/2)
+        {
+            enmLoc.x -= t;
+         }   moveDis +=t;
+
+        xmin +=1/(float)frames;
+        xmax +=1/(float)frames;
+        ymin =0.75;
+        ymax =1.0;
+
+        if(xmax>1){
+                xmax =1/(float)frames;
+                xmin =0;
+            }
+   }
+
+   else if(right)
+   {
+       if(enmLoc.x<1-unitWidth/2)
+          {
+              enmLoc.x += t;
+           }   moveDis +=t;
+
+            xmin +=1/(float)frames;
+            xmax +=1/(float)frames;
+            ymin =0.5;
+            ymax =0.75;
+
+            if(xmax>1){
+                xmax =1/(float)frames;
+                xmin =0;
+              }
+     }
+
+  }else objectTimer->Reset();
+}
+ else {moveDis =0;down=up=left=right=false; }
+}
+
+
+GridLoc Enemies::getEnemyLoc()
+{
+   GridLoc val;
+   val.x = (int)(ceil((enmLoc.x +(1-unitWidth))/unitWidth));
+   val.y = (int)(ceil((enmLoc.y +(1-unitWidth))/unitWidth));
+
+    return val;
+}
+
+bool Enemies::getIsObjectActing()
+{
+    return isObjectActing;
+}
+
+void Enemies::updateEnemyVecPos(vectorstuff foo, int a, int b){
+    /*if((enemyloctrackx[0] != enemyloctrackx[1]) || (enemyloctracky[0] != enemyloctracky[1])){
+
+    }*/
+    enemyloctrackx[1] = a;
+    enemyloctracky[1] = b;
+    if (enemyloctrackx[0] != enemyloctrackx[1]){
+            swap(enemyloctrackx[0], enemyloctrackx[1]);
+         }
+    if (enemyloctracky[0] != enemyloctracky[1]){
+            swap(enemyloctracky[0], enemyloctracky[1]);
+         }
+    //cout << a << " " << b << endl;
+    //cout << enemyloctrackx[0] << " " << enemyloctrackx[1] << " " << enemyloctracky[0] << " " << enemyloctracky[1] << endl;
+
+
+}
+
+void Enemies::enemyupdatepos(int x, int y){//AS this will update position 0 to the current position of the player
+         enemyloctrackx[0] = getEnemyLoc().x;
+         enemyloctrackx[1] = getEnemyLoc().x;
+         enemyloctracky[0] = getEnemyLoc().y;
+         enemyloctracky[1] = getEnemyLoc().y;
+}
+
+void Enemies::objectAction(vectorstuff bash)
+{
+    if (canObjectAct)
+    {
+        canObjectAct = false;
+        if (objectGenericCounter >= 4)
+            objectGenericCounter = 0;
+
+        switch (objectGenericCounter)
+        {
+            case 0:
+                //if (objectDirectionFaced != 3)  //to change direction facing without moving
+                moveEnemy("right");
+                objectGenericCounter++;
+                break;
+            case 1:
+                moveEnemy("up");
+                objectGenericCounter++;
+                break;
+            case 2:
+                moveEnemy("left");
+                objectGenericCounter++;
+                break;
+            case 3:
+                moveEnemy("down");
+                objectGenericCounter++;
+                break;
+        }
+        //objectGenericCounter++;
+    }
+
+
+}
+
+void Enemies::setActionStatus(bool inpCanAct)
+{
+    canObjectAct = inpCanAct;
+}
+
+void Enemies::changeDirection()
+{
+
+}

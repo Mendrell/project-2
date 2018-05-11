@@ -1,0 +1,16 @@
+#ifndef AI_H
+#define AI_H
+
+
+class ai
+{
+    public:
+        ai();
+        virtual ~ai();
+
+    protected:
+
+    private:
+};
+
+#endif // AI_H
