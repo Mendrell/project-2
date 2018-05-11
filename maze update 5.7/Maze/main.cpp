@@ -102,7 +102,7 @@ void checkBounds (int x, int y){
 
 vectorstuff vecref;//AS declares the vector we keep track of everything in
 
-void updateenemyvecmain(){//AS i dont know why but this function has to be passed in main or it wont work
+/*void updateenemyvecmain(){//AS i dont know why but this function has to be passed in main or it wont work
     for(int i = 0; i < enemycount; i++){
             int curx = E[i].getEnemyLoc().x;
             int cury = E[i].getEnemyLoc().y;
@@ -111,7 +111,7 @@ void updateenemyvecmain(){//AS i dont know why but this function has to be passe
             vecref.updateVecref(E[i].enemyloctrackx[0], E[i].enemyloctracky[0], 'E');
 
         }
-}
+}*/
 vector<units> perimeter;
 void checkperim(units bin){//Dhanyu may be giving us a better check condition for the player still may need to do this for the enemy
     perimeter.push_back(vecref.getvecpos(bin.x, bin.y));
@@ -456,21 +456,21 @@ int Print(int Array[]){
             vecref.updateVecref(loctrackx[1], loctracky[1], '_');//updates the vecref in real time
             vecref.updateVecref(loctrackx[0], loctracky[0], 'P');
         }
-        updateenemyvecmain();//there may be a better place to put this
+        //updateenemyvecmain();//there may be a better place to put this
         keysPressed.moveUp = false;
     }
     if (keysPressed.moveDown)
     {
         //if(P->playerCollision(3,3))break;
          checkwallcollision();
-         updatepos(P->getPlayerLoc().x, P->getPlayerLoc().y);
+         //updatepos(P->getPlayerLoc().x, P->getPlayerLoc().y);
          //displayloctrack();
 
          if((loctrackx[0] != loctrackx[1]) || (loctracky[0] != loctracky[1])){//makes it so that the enemy only moves when the player enter a new square
             vecref.updateVecref(loctrackx[1], loctracky[1], '_');
             vecref.updateVecref(loctrackx[0], loctracky[0], 'P');
         }
-        updateenemyvecmain();//there may be a better place to put this
+        //updateenemyvecmain();//there may be a better place to put this
 
         keysPressed.moveDown = false;
     }
@@ -478,14 +478,14 @@ int Print(int Array[]){
     {
         //if(P->playerCollision(3,3))break;
         checkwallcollision();
-        updatepos(P->getPlayerLoc().x, P->getPlayerLoc().y);
+        //updatepos(P->getPlayerLoc().x, P->getPlayerLoc().y);
         //displayloctrack();
 
         if((loctrackx[0] != loctrackx[1]) || (loctracky[0] != loctracky[1])){//makes it so that the enemy only moves when the player enter a new square
         vecref.updateVecref(loctrackx[1], loctracky[1], '_');
         vecref.updateVecref(loctrackx[0], loctracky[0], 'P');
         }
-        updateenemyvecmain();//there may be a better place to put this
+       //updateenemyvecmain();//there may be a better place to put this
 
         keysPressed.moveLeft = false;
     }
@@ -500,7 +500,7 @@ int Print(int Array[]){
             vecref.updateVecref(loctrackx[1], loctracky[1], '_');
             vecref.updateVecref(loctrackx[0], loctracky[0], 'P');
         }
-        updateenemyvecmain();//there may be a better place to put this
+        //updateenemyvecmain();//there may be a better place to put this
 
         keysPressed.moveRight = false;
     }
@@ -545,7 +545,7 @@ int Print(int Array[]){
 
     }
 
-    updateenemyvecmain();
+    //updateenemyvecmain();
 
     if (canTakeAction)
     {

@@ -22,6 +22,14 @@ class Enemies
 
         void placeEnemy(int,int);           // place enemy
         void drawEnemy();                   // Draw Enemy with Animation
+         void updateEnemyVecPos();
+        int enemyloctrackx[2]{};
+        int enemyloctracky[2]{};
+        int enemyloctrackxbar[2]{};
+        int enemyloctrackybar[2]{};
+        void enemyupdatepos(int, int);
+        void updateEnemyVecPos(vectorstuff, int, int);
+        void updateenemyvecref(vectorstuff, int, int, int, int, char);
         void moveEnemy(string, vectorstuff);             // move Enemy left,right,up,down
         void animate();                     // Animate sprite
         GridLoc getEnemyLoc();              // Return Enemy current grid location
@@ -31,12 +39,7 @@ class Enemies
         void objectLogicAction(bool isBlockCollision); //this is to revert to previous location or do real consequences
 
         void setActionStatus(bool inpCanAct);
-        void updateEnemyVecPos();
-        int enemyloctrackx[2]{};
-        int enemyloctracky[2]{};
-        void enemyupdatepos(int, int);
-        void updateEnemyVecPos(vectorstuff, int, int);
-        void updateenemyvecref(vectorstuff, int, int, int, int, char);
+
 
 		GridLoc getObjCurrGridLoc();
         GridLoc getObjNewGridLoc();
