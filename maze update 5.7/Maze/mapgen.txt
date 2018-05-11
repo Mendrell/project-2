@@ -1,7 +1,7 @@
 grid 15 0
 player 10 4
-enemy 1 5
-chest 1 14
+
+chest 11 4
 arrow 14 7
 wall 0 14
 wall 0 13
