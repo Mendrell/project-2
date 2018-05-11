@@ -51,6 +51,10 @@ class templateFunctions
         template <class T>
         void display2DVec(vector < vector <T> > inpVector, string inpDelim = "");
 
+        //IMPORTANT: Y is the first dimension, X is the second
+        //i.e. vec.at(y).at(x)
+        //so if your vec is vec.at(x).at(y)
+            //then you will need to flip the inputs
         template <class T>
         T getMapElement(vector < vector <T> > inpVector, int inpX, int inpY);
 

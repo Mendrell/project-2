@@ -4,6 +4,10 @@
 
 const int GSPACE = 0;
 const int GWALL = 1;
+const int GPLAYER = 2;
+const int GENEMY = 3;
+const int GCHEST = 4;
+const int GAMMO = 5;
 
 vectorstuff::vectorstuff()
 {
@@ -148,25 +152,25 @@ int vectorstuff::characterParser(char inpChar)
 	switch(inpChar)
 	{
 		case ' ':
-			retInt = 0;
+			retInt = GSPACE;
 			break;
 		case '#':
-			retInt = 1;
+			retInt = GWALL;
 			break;
-		case 'p':
-			retInt = 2;
+		case 'P':
+			retInt = GPLAYER;
 			break;
-		case 'e':
-			retInt = 3;
+		case 'E':
+			retInt = GENEMY;
 			break;
-		case 'c':
-			retInt = 4;
+		case 'C':
+			retInt = GCHEST;
 			break;
-		case 'a':
-			retInt = 5;
+		case 'A':
+			retInt = GAMMO;
 			break;
 		default:
-			cout << "error parsing" << endl;
+			//cout << "error parsing" << endl;
 			break;
 	}
 
@@ -179,29 +183,144 @@ char vectorstuff::intParser(int inpInt)
 	retChar = 0;
 	switch(inpInt)
 	{
-		case 0:
-			retChar = '.';
+		case GSPACE:
+			retChar = '_';
 			break;
-		case 1:
+		case GWALL:
 			retChar = '#';
 			break;
-		case 2:
-			retChar = 'p';
+		case GPLAYER:
+			retChar = 'P';
 			break;
-		case 3:
-			retChar = 'e';
+		case GENEMY:
+			retChar = 'E';
 			break;
-		case 4:
-			retChar = 'c';
+		case GCHEST:
+			retChar = 'C';
 			break;
-		case 5:
-			retChar = 'a';
+		case GAMMO:
+			retChar = 'A';
 			break;
 		default:
-			cout << "error parsing" << endl;
+			//cout << "error parsing" << endl;
 			break;
 	}
 
 	return retChar;
 }
+
+void vectorstuff::pathFinding(GridLoc startPos, GridLoc endPos, queue<GridLoc>& retSolution)
+{
+    vector < vector < int > > mainIntMap;
+    graphCoord tempStartPos;
+    graphCoord tempEndPos;
+    vector < graphCoord > tempEndPoss;
+    queue < graphCoord > tempRetSolution;
+    queue < GridLoc > tempSolution;
+
+    tempStartPos = convertGLtoGC(startPos);
+    tempEndPos = convertGLtoGC(endPos);
+    tempEndPoss.push_back(tempEndPos);
+
+    convertUnitMapToIntMap(mastervec, mainIntMap);
+
+    //void basicDijkstra(vector < vector < int > > inpGraph, graphCoord startPos, vector <graphCoord> endPos, queue < graphCoord > &retSolution);
+
+    basicDijkstra(mainIntMap, tempStartPos, tempEndPoss, tempRetSolution);
+
+    convertQueueGCtoGL(tempRetSolution, tempSolution);
+    retSolution = tempSolution;
+
+}
+
+void vectorstuff::convertUnitMapToIntMap(vector< vector < units > > inpUnitMap, vector < vector < int > > &retIntMap)
+{
+    vector < vector < int > > tempIntMap;
+
+    int dimX;
+    int dimY;
+
+    dimX = inpUnitMap.size();
+
+    dimY = 0;
+    for (int i = 0; i < inpUnitMap.size(); i++)
+    {
+        if (inpUnitMap.at(i).size() > dimY)
+            dimY = inpUnitMap.at(i).size();
+    }
+
+    vector < int > tempIntVec;
+    for (int i = 0; i < dimX; i++)
+    {
+        tempIntVec.push_back(GSPACE);
+    }
+
+    for (int i = 0; i < dimY; i++)
+    {
+        tempIntMap.push_back(tempIntVec);
+    }
+
+    char tempChar;
+    for (int currX = 0; currX < inpUnitMap.size(); currX++)
+    {
+        for (int currY = 0; currY < inpUnitMap.at(currX).size(); currY++)
+        {
+            tempChar = inpUnitMap.at(currX).at(currY).print_unit();
+            if (characterParser(tempChar) == GWALL)
+            {
+                tempIntMap.at(currY).at(currX) = GWALL;
+            }
+        }
+
+    }
+
+    retIntMap = tempIntMap;
+}
+
+GridLoc vectorstuff::convertGCtoGL(graphCoord inpCoord)
+{
+    GridLoc retCoord;
+
+    retCoord.x = inpCoord.x;
+    retCoord.y = inpCoord.y;
+
+    return retCoord;
+}
+
+graphCoord vectorstuff::convertGLtoGC(GridLoc inpCoord)
+{
+    graphCoord retCoord;
+
+    retCoord.x = inpCoord.x;
+    retCoord.y = inpCoord.y;
+
+    return retCoord;
+}
+
+void vectorstuff::convertQueueGCtoGL(queue<graphCoord>inpQueue, queue<GridLoc>& retQueue)
+{
+    queue < GridLoc > tempQueue;
+
+    while (!inpQueue.empty())
+    {
+        tempQueue.push(convertGCtoGL(inpQueue.front()));
+        inpQueue.pop();
+    }
+
+    retQueue = tempQueue;
+}
+
+void vectorstuff::convertQueueGLtoGC(queue<GridLoc>inpQueue, queue<graphCoord>& retQueue)
+{
+    queue < graphCoord > tempQueue;
+
+    while (!inpQueue.empty())
+    {
+        tempQueue.push(convertGLtoGC(inpQueue.front()));
+        inpQueue.pop();
+    }
+
+    retQueue = tempQueue;
+}
+
 

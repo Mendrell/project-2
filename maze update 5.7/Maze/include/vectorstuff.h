@@ -91,11 +91,13 @@ class vectorstuff
         bool bs = false;
         int test;
 
-        void convertUnitMapToIntMap(vector < vector < units > > inpUnitMap, vector < vector < int > > retIntMap);
-        void convertGCtoGL();
-        void convertGLtoGC();
-        void convertQueueGCtoGL();
-        void convertQueueGLtoGC();
+        void pathFinding(GridLoc startPos, GridLoc endPos, queue < GridLoc > &retSolution);
+
+        void convertUnitMapToIntMap(vector < vector < units > > inpUnitMap, vector < vector < int > > &retIntMap);
+        GridLoc convertGCtoGL(graphCoord inpCoord);
+        graphCoord convertGLtoGC(GridLoc inpCoord);
+        void convertQueueGCtoGL(queue < graphCoord > inpQueue, queue < GridLoc > &retQueue);
+        void convertQueueGLtoGC(queue < GridLoc > inpQueue, queue < graphCoord > &retQueue);
 
         void basicDijkstra(vector < vector < int > > inpGraph, graphCoord startPos, vector <graphCoord> endPos, queue < graphCoord > &retSolution);
 
