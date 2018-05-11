@@ -34,11 +34,6 @@ class Enemies
         void enemyupdatepos(int, int);
         void updateEnemyVecPos(vectorstuff, int, int);
 
-        GridLoc getObjGridLoc();
-        GridLoc getObjNewGridLoc();
-        void setObjGridLoc(GridLoc inpGridLoc);
-        void setObjNewGridLoc(GridLoc inpGridLoc);
-
 
         int gridSize;                       // Grid size of the maze
         float unitWidth;                    // Unit width of the grid
@@ -64,9 +59,6 @@ class Enemies
         bool canObjectAct;
         bool needDirectionChange;
         int objectGenericCounter;
-
-        GridLoc objectCurrentGridLoc;
-        GridLoc objectNewGridLoc;
 };
 
 #endif // ENEMIES_H

@@ -55,13 +55,9 @@
 		<Unit filename="include/Enemies.h" />
 		<Unit filename="include/Maze.h" />
 		<Unit filename="include/Timer.h" />
-		<Unit filename="include/ai.h" />
 		<Unit filename="include/enemyai.h" />
-		<Unit filename="include/fdgdfg.h" />
 		<Unit filename="include/player.h" />
-		<Unit filename="include/templateFunctions.h" />
 		<Unit filename="include/units.h" />
-		<Unit filename="include/utilityFunctions.h" />
 		<Unit filename="include/vectorstuff.h" />
 		<Unit filename="include/wall.h" />
 		<Unit filename="main.cpp" />
@@ -69,11 +65,8 @@
 		<Unit filename="src/Maze.cpp" />
 		<Unit filename="src/Timer.cpp" />
 		<Unit filename="src/enemyai.cpp" />
-		<Unit filename="src/fdgdfg.cpp" />
 		<Unit filename="src/player.cpp" />
-		<Unit filename="src/templateFunctions.cpp" />
 		<Unit filename="src/units.cpp" />
-		<Unit filename="src/utilityFunctions.cpp" />
 		<Unit filename="src/vectorstuff.cpp" />
 		<Unit filename="src/wall.cpp" />
 		<Extensions>

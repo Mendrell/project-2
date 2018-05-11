@@ -33,6 +33,7 @@ Enemies::Enemies()
 
     objectGenericCounter = 0;
     needDirectionChange = false;
+
 }
 
 Enemies::~Enemies()
@@ -238,27 +239,34 @@ void Enemies::objectAction(vectorstuff bash, units curenemypos, vector<units> pl
         canObjectAct = false;
         enemyai moveai;
         units themove = moveai.returnSolution(bash.mastervec, curenemypos, playerpos);
+        cout << "Enemy current location: x."<< getEnemyLoc().x << "   y." <<getEnemyLoc().y << endl;
+        cout << "The AI move: x."<< themove.x << "   y." << themove.y << endl << endl;
+        cout << "front of solution que: "<< moveai.solutionQueue.front().x << "   " << moveai.solutionQueue.front().y;
 
 
         if(getEnemyLoc().x == themove.x){
             if(getEnemyLoc().y == themove.y + 1){
+                cout << "Enemy moved up." << endl;
                 objectGenericCounter = 1;
             }
             else if(getEnemyLoc().y == themove.y - 1){
+                cout << "Enemy moved down." << endl;
                 objectGenericCounter = 3;
             }
         }
 
         else if(getEnemyLoc().y == themove.y){
             if(getEnemyLoc().x == themove.x + 1){
+                cout << "Enemy moved right." << endl;
                 objectGenericCounter = 0;
             }
             else if(getEnemyLoc().x == themove.x - 1){
+                cout << "Enemy moved left." << endl;
                 objectGenericCounter = 2;
             }
         }
         else
-            cout << "something is not working right";
+            //cout << "something is not working right";
             objectGenericCounter = 2;
 
         switch (objectGenericCounter)

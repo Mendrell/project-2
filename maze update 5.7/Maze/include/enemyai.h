@@ -64,7 +64,7 @@ class enemyai
                     else
                     {
                         //just checks if in bounds
-                        expandGraphLoc(inpGraph, frontier.front(), tempExpansion);
+                        expandGraphLoc(inpGraph, frontier.front(), tempExpansion);//<-----------------
                         nodesExpanded++;
                         for (int i = 0; i < tempExpansion.size(); i++)
                         {
@@ -88,7 +88,7 @@ class enemyai
                     potentialSolutions.pop();
                 }
             }
-
+             int searchvectorcount = 0;
             template<class T>
             int searchVector(std::vector <T> vecToSearch, T varToFind)
             {
@@ -108,30 +108,36 @@ class enemyai
                         done = true;
                         retIndex = count00;
                     }
-                    count00++;
+                    //cout << "\n \ncount in searchvector   "<< count00 << endl << endl;
+                    count00++;//this should not and never does iterate past 0
                 }
 
+                searchvectorcount++;
+                //cout << searchvectorcount <<endl<<endl;
                 return retIndex;
+                //this function is returning when the enemy encounters the player corectly, things get a little wacky becasue
+                //the walls are getting over written when a enemy or player passes through them
+                //enemy should not be going through walls though checked in BFS
             }
 
             void expandGraphLoc(vector < vector < units > > inpGraph, units inpCoord, vector < units > &retExpansion)
             {
                 vector < units > tempVec;
-                char c = inpCoord.type;
-                for (int i = inpCoord.y - 1; i <= inpCoord.y + 1; i++)
+                char c = inpCoord.type;//this will be the enemies character type 'E'
+                for (int i = inpCoord.x - 1; i <= inpCoord.x + 1; i++)
                 {
-                    for (int j = inpCoord.x - 1; j <= inpCoord.x + 1; j++)
+                    for (int j = inpCoord.y - 1; j <= inpCoord.y + 1; j++)
                     {
-                        if (!(i == inpCoord.y && j == inpCoord.x)) //this makes it so it doesn't include itself
+                        if (!(i == inpCoord.x && j == inpCoord.y)) //this makes it so it doesn't include itself
                         {
-                        if (i == inpCoord.y || j == inpCoord.x) //this makes it so that it only moves up and down - without out diagonal is valid
+                        if (i == inpCoord.x || j == inpCoord.y) //this makes it so that it only moves up and down - without out diagonal is valid
                         {
                             if (i >= 0 && i < inpGraph.size())
                             {
                                 if (j >= 0 && j < inpGraph.at(i).size())
                                 {
                                     units temp;
-                                    temp.set_unit(j, i, c);
+                                    temp.set_unit(i, j, c);
                                     //cout << "push back" << endl;
                                     tempVec.push_back(temp);
                                 }
@@ -140,6 +146,11 @@ class enemyai
                         }
                     }
                 }
+                for (int z=0; z < tempVec.size() ; z++){
+                    cout << tempVec[z].x << ", " << tempVec[z].y << "   ";
+                }
+                cout << endl;
+                system("pause");
                 retExpansion = tempVec;
             }
 
