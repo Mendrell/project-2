@@ -22,21 +22,41 @@ class Enemies
 
         void placeEnemy(int,int);           // place enemy
         void drawEnemy();                   // Draw Enemy with Animation
-        void moveEnemy(string);             // move Enemy left,right,up,down
+         void updateEnemyVecPos();
+        int enemyloctrackx[2]{};
+        int enemyloctracky[2]{};
+        int enemyloctrackxbar[2]{};
+        int enemyloctrackybar[2]{};
+        void enemyupdatepos(int, int);
+        void updateEnemyVecPos(vectorstuff, int, int);
+        void updateenemyvecref(vectorstuff, int, int, int, int, char);
+        //void moveEnemy(string, vectorstuff);             // move Enemy left,right,up,down
+        void moveEnemy(string);
         void animate();                     // Animate sprite
         GridLoc getEnemyLoc();              // Return Enemy current grid location
         bool getIsObjectActing();
+
         void objectAction(vectorstuff, units, vector<units>);
+        void objectLogicAction(bool isBlockCollision); //this is to revert to previous location or do real consequences
+
         void setActionStatus(bool inpCanAct);
-        void updateEnemyVecPos();
-        int enemyloctrackx[2]{};
-        int enemyloctracky[2]{};
-        void enemyupdatepos(int, int);
-        void updateEnemyVecPos(vectorstuff, int, int);
-		GridLoc getObjGridLoc();
+
+
+		GridLoc getObjCurrGridLoc();
         GridLoc getObjNewGridLoc();
-        void setObjGridLoc(GridLoc inpGridLoc);
-        void setObjNewGridLoc(GridLoc inpGridLoc);						   
+        GridLoc getObjOldGridLoc();
+
+        void setObjCurrGridLoc(GridLoc inpGridLoc);
+        void setObjNewGridLoc(GridLoc inpGridLoc);
+        void setObjOldGridLoc(GridLoc inpGridLoc);
+
+        loc getObjCurrRealLoc();
+        loc getObjNewRealLoc();
+        loc getObjOldRealLoc();
+
+        void setObjCurrRealLoc(loc inpRealLoc);
+        void setObjNewRealLoc(loc inpRealLoc);
+        void setObjOldRealLoc(loc inpRealLoc);
 
         int gridSize;                       // Grid size of the maze
         float unitWidth;                    // Unit width of the grid
@@ -46,6 +66,7 @@ class Enemies
 
     private:
         void changeDirection();
+        GridLoc realToGrid(loc inpRealLoc);
 
         int frames;                        // number of frames generally
         float t;                           // steps for animation count
@@ -62,8 +83,14 @@ class Enemies
         bool canObjectAct;
         bool needDirectionChange;
         int objectGenericCounter;
-		GridLoc objectCurrentGridLoc;
-        GridLoc objectNewGridLoc;			 
+
+		GridLoc objCurrGridLoc;
+        GridLoc objNewGridLoc;
+        GridLoc objOldGridLoc;
+
+        loc objCurrRealLoc;
+        loc objOldRealLoc;
+        loc objNewRealLoc;
 };
 
 #endif // ENEMIES_H

@@ -19,7 +19,8 @@ Player::Player()
     arrowStatus = false;
     livePlayer = true;
 
-    objectTimer = new Timer();
+    //objectTimer = new Timer();
+    objectTimer = NULL;
     objectDirectionFaced = 6;
     canObjectAct = false;
     isObjectActing = false;
@@ -29,7 +30,8 @@ Player::Player()
 Player::~Player()
 {
     //dtor
-    delete objectTimer;
+    if (objectTimer != NULL)
+        delete objectTimer;
 }
 
 void Player::drawArrow()
@@ -162,6 +164,9 @@ void Player::drawplayer()
 
 void Player::initPlayer(int gSize,int frams, char *FileName)
 {
+
+    objectTimer = new Timer();
+
     frames = frams;
     gridSize = gSize;
 
@@ -187,6 +192,11 @@ void Player::placePlayer(int x, int y)
 {
     plyLoc.x =  converter(x,y).x;
     plyLoc.y =  converter(x,y).y;
+
+    setObjCurrRealLoc(plyLoc);
+    setObjCurrGridLoc({x, y});
+    setObjOldRealLoc(getObjCurrRealLoc());
+    setObjOldGridLoc(getObjCurrGridLoc());
 }
 
 void Player::movePlayer(char* dir)
@@ -302,33 +312,38 @@ void Player::objectAction()
     {
         //canObjectAct = false;
         isObjectActing = true;
+        setObjOldRealLoc(getObjCurrRealLoc());
+        setObjOldGridLoc(getObjCurrGridLoc());
         if (classPlayerActions.moveUp && !classPlayerActions.moveDown)
         {
-			setObjOldRealLoc(getObjCurrRealLoc());
+			//setObjOldRealLoc(getObjCurrRealLoc());
+			//setObjOldGridLoc(getObjCurrGridLoc());
             movePlayer("up");
         }
         else if (classPlayerActions.moveDown && !classPlayerActions.moveUp)
         {
-            setObjOldRealLoc(getObjCurrRealLoc());
+            //setObjOldRealLoc(getObjCurrRealLoc());
             movePlayer("down");
         }
         else if (classPlayerActions.moveLeft && !classPlayerActions.moveRight)
         {
-			setObjOldRealLoc(getObjCurrRealLoc());
+			//setObjOldRealLoc(getObjCurrRealLoc());
             movePlayer("left");
         }
         else if (classPlayerActions.moveRight && !classPlayerActions.moveLeft)
         {
-            setObjOldRealLoc(getObjCurrRealLoc());
+            //setObjOldRealLoc(getObjCurrRealLoc());
             movePlayer("right");
         }
         else if (classPlayerActions.shoot)
         {
-            setObjOldRealLoc(getObjCurrRealLoc());
+            //setObjOldRealLoc(getObjCurrRealLoc());
             shootArrow();
         }
         //isObjectActing = false;
         //classPlayerActions = {false, false, false, false, false};
+        setObjCurrRealLoc(getObjCurrRealLoc());
+        setObjCurrGridLoc(getObjCurrGridLoc());
     }
 }
 
@@ -343,6 +358,7 @@ void Player::objectLogicAction(bool isBlockCollision)
         else
         {
             setObjCurrRealLoc(getObjOldRealLoc());
+            setObjCurrGridLoc(getObjOldGridLoc());
         }
 
         canObjectAct = false;
@@ -447,6 +463,7 @@ loc Player::getObjOldRealLoc()
 
 void Player::setObjCurrRealLoc(loc inpRealLoc)
 {
+    objCurrRealLoc = inpRealLoc;
     plyLoc = inpRealLoc;
 }
 

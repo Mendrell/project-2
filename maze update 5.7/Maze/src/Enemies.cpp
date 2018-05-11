@@ -8,9 +8,8 @@
 #include <Timer.h>
 #include <enemyai.h>
 
+
 using namespace std;
-
-
 
 //Timer *T1 = new Timer();                             // Set Timer for animation
 Enemies::Enemies()
@@ -26,7 +25,9 @@ Enemies::Enemies()
     up= down = left=right=false;
     live = true;
 
-    objectTimer = new Timer();
+    //objectTimer = new Timer();
+    objectTimer = NULL;
+
     objectDirectionFaced = 6;
     canObjectAct = false;
     isObjectActing = false;
@@ -39,11 +40,13 @@ Enemies::Enemies()
 Enemies::~Enemies()
 {
     //dtor
-    delete objectTimer;
+    if (objectTimer != NULL)
+        delete objectTimer;
 }
 
 void Enemies::initEnm(int grid,int numFrames, char * FileName)
 {
+    objectTimer = new Timer();
     gridSize = grid;
     frames = numFrames;
     xmax =1/(float)frames;
@@ -94,6 +97,65 @@ void Enemies::placeEnemy(int x, int y)
     y+=1;
     enmLoc.x =  -1-unitWidth/2+(unitWidth)*x;
     enmLoc.y =  -1-unitWidth/2+(unitWidth)*y;
+
+    setObjCurrGridLoc({x, y});
+    setObjCurrRealLoc(enmLoc);
+    setObjOldGridLoc(getObjCurrGridLoc());
+    setObjOldRealLoc(getObjCurrRealLoc());
+    setObjNewGridLoc(getObjCurrGridLoc());
+    setObjNewRealLoc(getObjCurrRealLoc());
+}
+
+
+
+void Enemies::updateEnemyVecPos(vectorstuff foo, int a, int b){
+    /*if((enemyloctrackx[0] != enemyloctrackx[1]) || (enemyloctracky[0] != enemyloctracky[1])){
+
+    }*/
+    enemyloctrackx[1] = a;
+    enemyloctracky[1] = b;
+    int temp1, temp2, temp3, temp4;
+
+    if (enemyloctrackx[0] != enemyloctrackx[1]){
+
+            swap(enemyloctrackx[0], enemyloctrackx[1]);
+         }
+    if (enemyloctracky[0] != enemyloctracky[1]){
+            swap(enemyloctracky[0], enemyloctracky[1]);
+         }
+    if((enemyloctrackx[0] != enemyloctrackx[1]) || (enemyloctracky[0] != enemyloctracky[1])){
+        updateenemyvecref(foo, enemyloctrackx[1], enemyloctracky[1], enemyloctrackx[0], enemyloctracky[0], 'E');
+    }
+
+
+
+}
+
+void Enemies::enemyupdatepos(int x, int y){//AS this will update position 0 to the current position of the player
+         enemyloctrackx[0] = getEnemyLoc().x;
+         enemyloctrackx[1] = getEnemyLoc().x;
+         enemyloctrackxbar[0]= getEnemyLoc().x;
+         enemyloctracky[0] = getEnemyLoc().y;
+         enemyloctracky[1] = getEnemyLoc().y;
+         enemyloctrackybar[0]= getEnemyLoc().x;
+}
+
+void Enemies::updateenemyvecref(vectorstuff temp, int old_x, int old_y, int new_x, int new_y, char type){
+    //temp.updateVecref(old_x, old_y, '_');
+   // cout << "almost there \n";
+    //system("pause");
+    units temp1;
+    temp1.set_unit(old_x,old_y,'_');
+    units temp2;
+    temp2.set_unit(new_x,new_y, type);
+    temp.temp1 = temp1;
+    temp.temp2 = temp2;
+
+
+    //temp.mastervec[old_x][old_y] = temp1;
+    //temp.mastervec[new_x][new_y] = temp2;
+
+
 }
 
 void Enemies::moveEnemy(string dir)
@@ -195,11 +257,15 @@ if(up)
 
 GridLoc Enemies::getEnemyLoc()
 {
+    /*
    GridLoc val;
    val.x = (int)(ceil((enmLoc.x +(1-unitWidth))/unitWidth));
    val.y = (int)(ceil((enmLoc.y +(1-unitWidth))/unitWidth));
 
     return val;
+    */
+
+    return realToGrid(enmLoc);
 }
 
 bool Enemies::getIsObjectActing()
@@ -207,44 +273,33 @@ bool Enemies::getIsObjectActing()
     return isObjectActing;
 }
 
-void Enemies::updateEnemyVecPos(vectorstuff foo, int a, int b){
-    /*if((enemyloctrackx[0] != enemyloctrackx[1]) || (enemyloctracky[0] != enemyloctracky[1])){
 
-    }*/
-    enemyloctrackx[1] = a;
-    enemyloctracky[1] = b;
-    if (enemyloctrackx[0] != enemyloctrackx[1]){
-            swap(enemyloctrackx[0], enemyloctrackx[1]);
-         }
-    if (enemyloctracky[0] != enemyloctracky[1]){
-            swap(enemyloctracky[0], enemyloctracky[1]);
-         }
-    //cout << a << " " << b << endl;
-    //cout << enemyloctrackx[0] << " " << enemyloctrackx[1] << " " << enemyloctracky[0] << " " << enemyloctracky[1] << endl;
-
-
-}
-
-void Enemies::enemyupdatepos(int x, int y){//AS this will update position 0 to the current position of the player
-         enemyloctrackx[0] = getEnemyLoc().x;
-         enemyloctrackx[1] = getEnemyLoc().x;
-         enemyloctracky[0] = getEnemyLoc().y;
-         enemyloctracky[1] = getEnemyLoc().y;
-}
 
 void Enemies::objectAction(vectorstuff bash, units curenemypos, vector<units> playerpos)
 {
+    setObjOldGridLoc(getEnemyLoc()); //store old location
+    setObjOldRealLoc(enmLoc); //in case it needs to be reverted to
     if (canObjectAct)
     {
-        canObjectAct = false;
+        //setObjOldGridLoc(getEnemyLoc()); //store old location
+        //setObjOldRealLoc(enmLoc); //in case it needs to be reverted to
+
+        //canObjectAct = false;
         enemyai moveai;
+        /*
         units themove = moveai.returnSolution(bash.mastervec, curenemypos, playerpos);
         cout << "Enemy current location: x."<< getEnemyLoc().x << "   y." <<getEnemyLoc().y << endl;
         cout << "The AI move: x."<< themove.x << "   y." << themove.y << endl << endl;
         cout << "front of solution que: "<< moveai.solutionQueue.front().x << "   " << moveai.solutionQueue.front().y;
+        */
 
+        units themove;
+        //themove.set_unit(0, 0 '0');
+        themove.set_unit(0, 0, '0');
 
         if(getEnemyLoc().x == themove.x){
+            objectGenericCounter = 2;
+            /*
             if(getEnemyLoc().y == themove.y + 1){
                 cout << "Enemy moved up." << endl;
                 objectGenericCounter = 1;
@@ -264,36 +319,84 @@ void Enemies::objectAction(vectorstuff bash, units curenemypos, vector<units> pl
                 cout << "Enemy moved left." << endl;
                 objectGenericCounter = 2;
             }
+            */
         }
         else
             //cout << "something is not working right";
             objectGenericCounter = 2;
 
+        //cout << "start " << getEnemyLoc().x << " " << getEnemyLoc().y << endl;
+
+        loc tempLoc00;
         switch (objectGenericCounter)
         {
             case 0:
                 //if (objectDirectionFaced != 3)  //to change direction facing without moving
                 moveEnemy("right");
+                tempLoc00 = getObjCurrRealLoc();
+                tempLoc00.x += unitWidth;
+                setObjNewRealLoc(tempLoc00);
                 objectGenericCounter++;
                 break;
             case 1:
                 moveEnemy("up");
+                tempLoc00 = getObjCurrRealLoc();
+                tempLoc00.y += unitWidth;
+                setObjNewRealLoc(tempLoc00);
                 objectGenericCounter++;
                 break;
             case 2:
                 moveEnemy("left");
+                tempLoc00 = getObjCurrRealLoc();
+                tempLoc00.x -= unitWidth;
+                setObjNewRealLoc(tempLoc00);
                 objectGenericCounter++;
                 break;
             case 3:
                 moveEnemy("down");
+                tempLoc00 = getObjCurrRealLoc();
+                tempLoc00.x -= unitWidth;
+                setObjNewRealLoc(tempLoc00);
                 objectGenericCounter++;
                 break;
         }
+
+        //cout << "end " << getEnemyLoc().x << " " << getEnemyLoc().y << endl;
         //objectGenericCounter++;
+
+        //store the current locations
+        //setObjCurrRealLoc(enmLoc);
+        //setObjCurrGridLoc(getEnemyLoc());
+
+
     }
-
-
+    setObjCurrRealLoc(enmLoc);
+    setObjCurrGridLoc(getEnemyLoc());
 }
+
+void Enemies::objectLogicAction(bool isBlockCollision)
+{
+    if (canObjectAct)
+    {
+        if (!isBlockCollision)
+        {
+
+        }
+        else
+        {
+            //setObjCurrRealLoc(getObjOldRealLoc());
+            setObjNewRealLoc(getObjOldRealLoc());
+            setObjNewGridLoc(getObjOldGridLoc());
+            setObjCurrRealLoc(getObjOldRealLoc());
+            setObjCurrGridLoc(getObjOldGridLoc());
+        }
+
+        canObjectAct = false;
+        isObjectActing = false;
+        //classPlayerActions = {false, false, false, false, false};
+    }
+}
+
 
 void Enemies::setActionStatus(bool inpCanAct)
 {
@@ -303,4 +406,76 @@ void Enemies::setActionStatus(bool inpCanAct)
 void Enemies::changeDirection()
 {
 
+}
+
+GridLoc Enemies::getObjCurrGridLoc()
+{
+    //return objCurrGridLoc;
+    return getEnemyLoc();
+}
+
+GridLoc Enemies::getObjNewGridLoc()
+{
+    //return objNewGridLoc;
+    return realToGrid(objNewRealLoc);
+}
+
+GridLoc Enemies::getObjOldGridLoc()
+{
+    return objOldGridLoc;
+}
+
+void Enemies::setObjCurrGridLoc(GridLoc inpGridLoc)
+{
+    objCurrGridLoc = inpGridLoc;
+}
+
+void Enemies::setObjNewGridLoc(GridLoc inpGridLoc)
+{
+    objNewGridLoc = inpGridLoc;
+}
+
+void Enemies::setObjOldGridLoc(GridLoc inpGridLoc)
+{
+    objOldGridLoc = inpGridLoc;
+}
+
+loc Enemies::getObjCurrRealLoc()
+{
+    return objCurrRealLoc;
+}
+
+loc Enemies::getObjNewRealLoc()
+{
+    return objNewRealLoc;
+}
+
+loc Enemies::getObjOldRealLoc()
+{
+    return objOldRealLoc;
+}
+
+void Enemies::setObjCurrRealLoc(loc inpRealLoc)
+{
+    objCurrRealLoc = inpRealLoc;
+    enmLoc = inpRealLoc;
+}
+
+void Enemies::setObjNewRealLoc(loc inpRealLoc)
+{
+    objNewRealLoc = inpRealLoc;
+}
+
+void Enemies::setObjOldRealLoc(loc inpRealLoc)
+{
+    objOldRealLoc = inpRealLoc;
+}
+
+GridLoc Enemies::realToGrid(loc inpRealLoc)
+{
+    GridLoc val;
+   val.x = (int)(ceil((inpRealLoc.x +(1-unitWidth))/unitWidth));
+   val.y = (int)(ceil((inpRealLoc.y +(1-unitWidth))/unitWidth));
+
+    return val;
 }
