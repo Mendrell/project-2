@@ -1,6 +1,11 @@
 /*
  * MAZE Game Framework
  * Written by Dr. Dhanyu Amarasinghe Spring 2018
+
+ NM: 051018: changed it so that keys do not directly call any function
+    strong advice, have the keys only set flags
+    have the flags determine where a function should be called in idle()
+
  */
 
 #include <string.h>
@@ -29,8 +34,6 @@
 #include <units.h>
 #include <vectorstuff.h>
 
-#include <utilityFunctions.h>
-
 /* GLUT callback Handlers */
 
 using namespace std;
@@ -38,7 +41,12 @@ using namespace std;
 const int GENEMYLIMIT = 10;
 const int GWALLLIMIT = 100;
 
-Maze *M = new Maze(15);                         // Set Maze grid size
+//Maze *M = new Maze();                         // Set Maze grid size
+void updatepos(int x, int y);//AS this will update position 0 to the current position of the player
+void checkwallcollision();
+
+Maze *M = new Maze();                         // Set Maze grid size
+//Maze *M = new Maze(15);                         // Set Maze grid size
 Player *P = new Player();                       // create player
 
 wall W[GWALLLIMIT];                                    // wall with number of bricks
@@ -49,8 +57,11 @@ float wWidth, wHeight;                          // display window width and Heig
 float xPos,yPos;                                // Viewpoar mapping
 
 playerActions plyActs;
+playerActions keysPressed;
 bool canTakeAction;
 bool actionInProgress;
+bool menuisopen;
+bool gamestart=0;
 
 void display(void);                             // Main Display : this runs in a loop
 
@@ -109,10 +120,11 @@ void checkperim(units bin){//Dhanyu may be giving us a better check condition fo
 vector<units> morty(1);//all this vector does is hold the player position
 
 
-void init()
+void init(int a)
 {
+    if(!gamestart){
+    gamestart=1;
     glEnable(GL_COLOR_MATERIAL);
-
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
     glShadeModel(GL_SMOOTH);
     glEnable(GL_LINE_SMOOTH);
@@ -127,6 +139,8 @@ void init()
 
     glEnable(GL_BLEND);                                 //display images with transparent
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    }
+    string level[4] = {"mapgen.txt","mapgen2.txt","mapgen3.txt","mapgen4.txt"};
 
     M->loadBackgroundImage("images/bak.jpg");           // Load maze background image
     ifstream bob;//AS initializes a file called bob
@@ -138,9 +152,20 @@ void init()
 
 
 
+    int tempCount00 = 0;
     while(bob >> comm >> coor1 >> coor2){
 
-        if (comm == "chest"){//needs to be lower case
+        //cout << tempCount00 << endl;
+        //cout << M->getGridSize() << " " << comm << " " << coor1 << " " << coor2 << endl;
+        tempCount00++;
+        //cout << M->getGridSize() << " " << comm << " " << coor1 << " " << coor2 << endl;
+        if(comm == "grid"){
+
+            M->setgrid(coor1);
+            vecref.init2dvec(coor1);
+        }
+
+        else if (comm == "chest"){//needs to be lower case
             checkBounds(coor1,coor2);
             M->loadChestImage("images/chest.png");              // load chest image
             M->placeChest(coor1,coor2);// place chest in a grid
@@ -154,13 +179,20 @@ void init()
             P->initPlayer(M->getGridSize(),6,"images/p.png");   // initialize player pass grid size,image and number of frames
             P->loadArrowImage("images/arr.png");                // Load arrow image
             P->placePlayer(coor1,coor2);//place player
+
+            //cout << "in player" << endl;
+
             vecref.updateVecref(coor1, coor2, 'P');
+
+            //cout << "aft updVec" << endl;
 //-----------------------------------------------------------------------------------
 //this may need to get moved into the player class
             loctrackx[0] = coor1; loctrackx[1] = coor1;
             loctracky[0] = coor2; loctracky[1] = coor2;
 //-----------------------------------------------------------------------------------            updateVecref(coor1, coor2, 'P');//updates the vector units
             playercount++;
+
+            //cout << "end player" << endl;
             }
             else{
                 cout << "can not have more than one player.\n";
@@ -254,6 +286,7 @@ void init()
     vecref.init2dvec(M->getGridSize());//AS initializes the 2d vector to blank spaces
 //cout << "you are inside";
     plyActs = {false, false, false, false, false};
+    keysPressed = plyActs;
     canTakeAction = false;
     actionInProgress = false;
 }
@@ -266,7 +299,7 @@ void display(void)
          M->drawBackground();
         glPopMatrix();
 
-
+        if(!menuisopen){
         for(int i=0; i<wallcount;i++)
         {
            W[i].drawWall();
@@ -296,7 +329,7 @@ void display(void)
         glPushMatrix();
            M->drawArrows();
         glPopMatrix();
-
+        }
     glutSwapBuffers();
 }
 
@@ -310,6 +343,7 @@ void key(unsigned char key, int x, int y)
         case ' ':
             // if(!M->liveSetOfArrws)      // if setof arrows were picked by player
             //P->shootArrow();
+            keysPressed.shoot = true;
             plyActs.shoot = true;
             canTakeAction = true;
 
@@ -318,6 +352,55 @@ void key(unsigned char key, int x, int y)
         case 'q':
             exit(0);
             break;
+        case 'm':
+            if (menuisopen){
+                menuisopen=0;
+                //glClear (GL_COLOR_BUFFER_BIT);
+            M->loadBackgroundImage("images/bak.jpg");
+            //glPushMatrix();
+            M->drawBackground();
+            //glPopMatrix();
+                break;
+                }
+            //glClear (GL_COLOR_BUFFER_BIT);
+            M->loadBackgroundImage("images/menu.jpg");
+            //glPushMatrix();
+            M->drawBackground();
+            //glPopMatrix();
+            menuisopen=1;
+            break;
+        case '1':
+            if (menuisopen){
+                wallclear(W, wallcount);
+                enemyclear(E, enemycount);
+                init(0);
+                menuisopen=0;
+            } break;
+
+
+        case '2':
+            if (menuisopen){
+                wallclear(W, wallcount);
+                enemyclear(E, enemycount);
+                init(1);
+                menuisopen=0;
+            }break;
+
+        case '3':
+            if (menuisopen){
+                wallclear(W, wallcount);
+                enemyclear(E, enemycount);
+                init(2);
+                menuisopen=0;
+            } break;
+
+        case '4':
+            if (menuisopen){
+                wallclear(W, wallcount);
+                enemyclear(E, enemycount);
+                init(3);
+                menuisopen=0;
+            } break;
     }
 
     glutPostRedisplay();
@@ -355,23 +438,72 @@ int Print(int Array[]){
  void idle(void)
 {
 
-    utilityFunctions utilFunc;
+
      //vecref.display2DVec();
 
      //system("cls");
      morty[0] = vecref.getvecpos(P->getPlayerLoc().x, P->getPlayerLoc().y);
 
+     /*
+    if (keysPressed.moveUp)
+    {
+        //if(P->playerCollision(3,3))break;
+         updatepos(P->getPlayerLoc().x, P->getPlayerLoc().y);
+         //displayloctrack();
+
+         if((loctrackx[0] != loctrackx[1]) || (loctracky[0] != loctracky[1])){//makes it so that the enemy only moves when the player enter a new square
+            vecref.updateVecref(loctrackx[1], loctracky[1], '_');//updates the vecref in real time
+            vecref.updateVecref(loctrackx[0], loctracky[0], 'P');
+        }
+        updateenemyvecmain();//there may be a better place to put this
+    }
+    if (keysPressed.moveDown)
+    {
+        //if(P->playerCollision(3,3))break;
+         checkwallcollision();
+         updatepos(P->getPlayerLoc().x, P->getPlayerLoc().y);
+         //displayloctrack();
+
+         if((loctrackx[0] != loctrackx[1]) || (loctracky[0] != loctracky[1])){//makes it so that the enemy only moves when the player enter a new square
+            vecref.updateVecref(loctrackx[1], loctracky[1], '_');
+            vecref.updateVecref(loctrackx[0], loctracky[0], 'P');
+        }
+        updateenemyvecmain();//there may be a better place to put this
+    }
+    if (keysPressed.moveLeft)
+    {
+        //if(P->playerCollision(3,3))break;
+        checkwallcollision();
+        updatepos(P->getPlayerLoc().x, P->getPlayerLoc().y);
+        //displayloctrack();
+
+        if((loctrackx[0] != loctrackx[1]) || (loctracky[0] != loctracky[1])){//makes it so that the enemy only moves when the player enter a new square
+        vecref.updateVecref(loctrackx[1], loctracky[1], '_');
+        vecref.updateVecref(loctrackx[0], loctracky[0], 'P');
+        }
+        updateenemyvecmain();//there may be a better place to put this
+    }
+    if (keysPressed.moveRight)
+    {
+        //if(P->playerCollision(3,3))break;
+         checkwallcollision();
+         updatepos(P->getPlayerLoc().x, P->getPlayerLoc().y);
+         //displayloctrack();
+
+         if((loctrackx[0] != loctrackx[1]) || (loctracky[0] != loctracky[1])){//makes it so that the enemy only moves when the player enter a new square
+            vecref.updateVecref(loctrackx[1], loctracky[1], '_');
+            vecref.updateVecref(loctrackx[0], loctracky[0], 'P');
+        }
+        updateenemyvecmain();//there may be a better place to put this
+    }
+    if (keysPressed.shoot)
+    {
+    }
+    */
+
     if (canTakeAction)
     {
         P->setActionStatus(plyActs, canTakeAction);
-
-        cout << P->getObjCurrGridLoc().x << " " << P->getObjCurrGridLoc().y << endl;
-        /*
-        for (int i = 0; i < GWALLLIMIT; i++)
-        {
-            cout << W[i].getObjCurrGridLoc().x << " " << W[i].getObjCurrGridLoc().y << endl;
-        }
-        */
 
         if((loctrackx[0] != loctrackx[1]) || (loctracky[0] != loctracky[1])){//makes it so that the enemy only moves when the player enter a new square
             for (int i = 0; i < GENEMYLIMIT; i++)
@@ -382,18 +514,7 @@ int Print(int Array[]){
 
     }
     P->objectAction();
-
-    bool tempBool00 = false;
-
-    for (int i = 0; i < GWALLLIMIT; i++)
-    {
-        if (utilFunc.gridCollision(P->getObjCurrGridLoc(), W[i].getObjCurrGridLoc()))
-            tempBool00 = true;
-    }
-
-
-    P->objectLogicAction(tempBool00);
-    for (int i = 0; i < GENEMYLIMIT; i++)
+    for (int i = 0; i < enemycount; i++)
     {
         E[i].objectAction(vecref,vecref.getvecpos(E[i].getEnemyLoc().x, E[i].getEnemyLoc().y), morty);
 
@@ -468,6 +589,7 @@ void Specialkeys(int key, int x, int y)
     switch(key)
     {
     case GLUT_KEY_UP:
+        /*
           if(P->playerCollision(3,3))break;
          updatepos(P->getPlayerLoc().x, P->getPlayerLoc().y);
          //displayloctrack();
@@ -481,12 +603,15 @@ void Specialkeys(int key, int x, int y)
          //E[0].moveEnemy("up");
          //E[1].moveEnemy("up");
          //E[2].moveEnemy("up");
+         */
+         keysPressed.moveUp = true;
          plyActs.moveUp = true;
         canTakeAction = true;
         annoying = false;
     break;
 
     case GLUT_KEY_DOWN:
+        /*
          if(P->playerCollision(3,3))break;
          checkwallcollision();
          updatepos(P->getPlayerLoc().x, P->getPlayerLoc().y);
@@ -497,15 +622,18 @@ void Specialkeys(int key, int x, int y)
             vecref.updateVecref(loctrackx[0], loctracky[0], 'P');
         }
         updateenemyvecmain();//there may be a better place to put this
+        */
          //P->movePlayer("down");
          //E[0].moveEnemy("down");
          //E[1].moveEnemy("down");
          //E[2].moveEnemy("down");
+         keysPressed.moveDown = true;
          plyActs.moveDown = true;
         canTakeAction = true;
     break;
 
     case GLUT_KEY_LEFT:
+        /*
          if(P->playerCollision(3,3))break;
          checkwallcollision();
          updatepos(P->getPlayerLoc().x, P->getPlayerLoc().y);
@@ -520,11 +648,14 @@ void Specialkeys(int key, int x, int y)
          //E[0].moveEnemy("left");
          //E[1].moveEnemy("left");
          //E[2].moveEnemy("left");
+         */
+         keysPressed.moveLeft = true;
          plyActs.moveLeft = true;
         canTakeAction = true;
     break;
 
     case GLUT_KEY_RIGHT:
+        /*
          if(P->playerCollision(3,3))break;
          checkwallcollision();
          updatepos(P->getPlayerLoc().x, P->getPlayerLoc().y);
@@ -535,10 +666,12 @@ void Specialkeys(int key, int x, int y)
             vecref.updateVecref(loctrackx[0], loctracky[0], 'P');
         }
         updateenemyvecmain();//there may be a better place to put this
+        */
          //P->movePlayer("right");
          //E[0].moveEnemy("right");
          //E[1].moveEnemy("right");
          //E[2].moveEnemy("right");
+         keysPressed.moveRight = true;
         plyActs.moveRight = true;
         canTakeAction = true;
     break;
@@ -558,7 +691,7 @@ int main(int argc, char *argv[])
    glutInitWindowSize (800, 800);                //window screen
    glutInitWindowPosition (100, 100);            //window position
    glutCreateWindow ("Maze");                    //program title
-   init();
+   init(1);
 
    glutDisplayFunc(display);                     //callback function for display
    glutReshapeFunc(resize);                      //callback for reshape
@@ -570,4 +703,3 @@ int main(int argc, char *argv[])
 
    return EXIT_SUCCESS;
 }
-  
