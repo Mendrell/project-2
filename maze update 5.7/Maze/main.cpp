@@ -580,10 +580,11 @@ int Print(int Array[]){
     {
         //cout << "here01" << endl;
         cout << P->getObjCurrGridLoc().x << " " << P->getObjCurrGridLoc().y << endl;
+        vecref.display2DVec();
 
     }
-    vecref.display2DVec();
-    system("cls");
+    //vecref.display2DVec();
+    //system("cls");
     plyActs = {false, false, false, false, false};
     canTakeAction = false;
     actionInProgress = false;
