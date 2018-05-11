@@ -645,6 +645,9 @@ int Print(int Array[]){
             {
                 E->at(i).setIsObjDead(true);
                 P->setIsProjDead(true);
+
+                //vecref.updateVecref(P->getObjOldGridLoc().x, P->getObjOldGridLoc().y, '_');
+                //vecref.updateVecref(E->at(i).getObjOldGridLoc().x, E->at(i).getObjOldGridLoc().y, '_');
             }
         }
     }
@@ -845,6 +848,7 @@ void cleanPlayerList()
 {
     if(P->getIsObjDead())
     {
+        vecref.updateVecref(P->getObjCurrGridLoc().x, P->getObjCurrGridLoc().y, '_');
         clearProjectileList();
         clearPlayerList();
         cout << "Player dead exit game" << endl;
@@ -859,7 +863,11 @@ void cleanEnemyList()
     for (int i = 0; i < E->size(); i++)
     {
         if (E->at(i).getIsObjDead())
+        {
+            vecref.updateVecref(E->at(i).getObjNewGridLoc().x, E->at(i).getObjNewGridLoc().y, '_');
             tFunc.removeVectorPointerElement(E, i);
+            cout << E->size() << endl;
+        }
     }
 }
 
@@ -869,7 +877,10 @@ void cleanWallList()
     for (int i = 0; i < W->size(); i++)
     {
         if (W->at(i).getIsObjDead())
+        {
+            vecref.updateVecref(W->at(i).getObjCurrGridLoc().x, W->at(i).getObjCurrGridLoc().y, '_');
             tFunc.removeVectorPointerElement(W, i);
+        }
     }
 }
 
