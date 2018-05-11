@@ -323,4 +323,32 @@ void vectorstuff::convertQueueGLtoGC(queue<GridLoc>inpQueue, queue<graphCoord>& 
     retQueue = tempQueue;
 }
 
+void vectorstuff::convertQueueGLtoString(queue<GridLoc>inpQueue, queue<string>& retQueue)
+{
+    queue < string > tempQueue;
+    string tempStr;
+    GridLoc tempGridLoc;
+
+    tempGridLoc = inpQueue.front();
+    inpQueue.pop();
+    while (!inpQueue.empty())
+    {
+
+        if (inpQueue.front().x - tempGridLoc.x < 0)
+            tempStr = "left";
+        else if (inpQueue.front().x - tempGridLoc.x > 0)
+            tempStr = "right";
+        else if (inpQueue.front().y - tempGridLoc.y < 0)
+            tempStr = "down";
+        else if (inpQueue.front().y - tempGridLoc.y > 0)
+            tempStr = "up";
+
+        tempQueue.push(tempStr);
+        tempGridLoc = inpQueue.front();
+        inpQueue.pop();
+    }
+
+    retQueue = tempQueue;
+}
+
 

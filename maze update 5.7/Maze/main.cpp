@@ -723,10 +723,16 @@ int main(int argc, char *argv[])
    glutCreateWindow ("Maze");                    //program title
    init(1);
 
+
    queue < GridLoc > tempRetSolution;
+   queue < string > tempStrSol;
    utilityFunctions uFunc;
    vecref.pathFinding({1, 12}, {10, 10}, tempRetSolution);
    uFunc.displayGLQueue(tempRetSolution);
+   vecref.convertQueueGLtoString(tempRetSolution, tempStrSol);
+   uFunc.displayStrQueue(tempStrSol);
+
+
 
    glutDisplayFunc(display);                     //callback function for display
    glutReshapeFunc(resize);                      //callback for reshape

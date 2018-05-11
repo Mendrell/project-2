@@ -92,6 +92,7 @@ class vectorstuff
         int test;
 
         void pathFinding(GridLoc startPos, GridLoc endPos, queue < GridLoc > &retSolution);
+        void convertQueueGLtoString(queue < GridLoc > inpQueue, queue < string > &retQueue);
 
          void crap(){
             mastervec[temp1.x][temp1.y] = temp1;

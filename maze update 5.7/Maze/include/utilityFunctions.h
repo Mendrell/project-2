@@ -4,6 +4,7 @@
 #include <queue>
 #include <CommonThings.h>
 
+
 class utilityFunctions
 {
     public:
@@ -15,6 +16,7 @@ class utilityFunctions
         bool isSameGridLoc(GridLoc objLoc0, GridLoc objLoc1);
         bool isInGridBounds(gridSize inpGridSize, GridLoc inpGridLoc);
         void displayGLQueue(queue < GridLoc > inpQueue);
+        void displayStrQueue(queue < string > inpQueue);
 
     protected:
 
