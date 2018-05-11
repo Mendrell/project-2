@@ -14,6 +14,7 @@ class utilityFunctions
         bool gridCollision (GridLoc objLoc0, GridLoc objLoc1);
         bool isSameGridLoc(GridLoc objLoc0, GridLoc objLoc1);
         bool isInGridBounds(gridSize inpGridSize, GridLoc inpGridLoc);
+        void displayGLQueue(queue < GridLoc > inpQueue);
 
     protected:
 

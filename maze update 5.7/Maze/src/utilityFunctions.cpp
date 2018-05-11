@@ -43,3 +43,14 @@ bool utilityFunctions::isInGridBounds(gridSize inpGridSize, GridLoc inpGridLoc)
 {
     return (inpGridLoc.x < inpGridSize.width && inpGridLoc.x >= 0 && inpGridLoc.y < inpGridSize.height && inpGridLoc.y >= 0);
 }
+
+void utilityFunctions::displayGLQueue(queue<GridLoc>inpQueue)
+{
+    while (!inpQueue.empty())
+    {
+        cout << inpQueue.front().x << ":" << inpQueue.front().y << " ";
+        inpQueue.pop();
+    }
+    cout << endl;
+}
+

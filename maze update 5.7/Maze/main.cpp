@@ -723,6 +723,11 @@ int main(int argc, char *argv[])
    glutCreateWindow ("Maze");                    //program title
    init(1);
 
+   queue < GridLoc > tempRetSolution;
+   utilityFunctions uFunc;
+   vecref.pathFinding({1, 12}, {10, 10}, tempRetSolution);
+   uFunc.displayGLQueue(tempRetSolution);
+
    glutDisplayFunc(display);                     //callback function for display
    glutReshapeFunc(resize);                      //callback for reshape
    glutKeyboardFunc(key);                        //callback function for keyboard

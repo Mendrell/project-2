@@ -93,23 +93,6 @@ class vectorstuff
 
         void pathFinding(GridLoc startPos, GridLoc endPos, queue < GridLoc > &retSolution);
 
-        void convertUnitMapToIntMap(vector < vector < units > > inpUnitMap, vector < vector < int > > &retIntMap);
-        GridLoc convertGCtoGL(graphCoord inpCoord);
-        graphCoord convertGLtoGC(GridLoc inpCoord);
-        void convertQueueGCtoGL(queue < graphCoord > inpQueue, queue < GridLoc > &retQueue);
-        void convertQueueGLtoGC(queue < GridLoc > inpQueue, queue < graphCoord > &retQueue);
-
-        void basicDijkstra(vector < vector < int > > inpGraph, graphCoord startPos, vector <graphCoord> endPos, queue < graphCoord > &retSolution);
-
-        void expandGraphLoc(vector < vector < int > > inpGraph, graphCoord inpCoord, vector < graphCoord > &retExpansion);
-        int characterParser(char inpChar);
-
-        int taxiDistanceGraphCoord(graphCoord inpStartPos, graphCoord inpEndPos);
-        int minTaxiDistGC(graphCoord inpStartPos, vector < graphCoord > inpEndPos);
-
-        bool isInPQGC(priority_queue <priorityCoordObject> inpQueue, graphCoord inpElement);
-        char intParser(int inpInt);
-
          void crap(){
             mastervec[temp1.x][temp1.y] = temp1;
             mastervec[temp2.x][temp2.y] = temp2;
@@ -175,6 +158,24 @@ class vectorstuff
     protected:
 
     private:
+
+        void convertUnitMapToIntMap(vector < vector < units > > inpUnitMap, vector < vector < int > > &retIntMap);
+        GridLoc convertGCtoGL(graphCoord inpCoord);
+        graphCoord convertGLtoGC(GridLoc inpCoord);
+        void convertQueueGCtoGL(queue < graphCoord > inpQueue, queue < GridLoc > &retQueue);
+        void convertQueueGLtoGC(queue < GridLoc > inpQueue, queue < graphCoord > &retQueue);
+
+        void basicDijkstra(vector < vector < int > > inpGraph, graphCoord startPos, vector <graphCoord> endPos, queue < graphCoord > &retSolution);
+
+        void expandGraphLoc(vector < vector < int > > inpGraph, graphCoord inpCoord, vector < graphCoord > &retExpansion);
+        int characterParser(char inpChar);
+
+        int taxiDistanceGraphCoord(graphCoord inpStartPos, graphCoord inpEndPos);
+        int minTaxiDistGC(graphCoord inpStartPos, vector < graphCoord > inpEndPos);
+
+        bool isInPQGC(priority_queue <priorityCoordObject> inpQueue, graphCoord inpElement);
+        char intParser(int inpInt);
+
         //vector<vector <units> > mastervec;
 };
 
