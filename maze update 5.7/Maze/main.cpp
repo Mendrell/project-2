@@ -152,11 +152,17 @@ void init(int a)
 
 
 
+    int tempCount00 = 0;
     while(bob >> comm >> coor1 >> coor2){
 
+        //cout << tempCount00 << endl;
+        //cout << M->getGridSize() << " " << comm << " " << coor1 << " " << coor2 << endl;
+        tempCount00++;
+        //cout << M->getGridSize() << " " << comm << " " << coor1 << " " << coor2 << endl;
         if(comm == "grid"){
 
             M->setgrid(coor1);
+            vecref.init2dvec(coor1);
         }
 
         else if (comm == "chest"){//needs to be lower case
@@ -173,13 +179,20 @@ void init(int a)
             P->initPlayer(M->getGridSize(),6,"images/p.png");   // initialize player pass grid size,image and number of frames
             P->loadArrowImage("images/arr.png");                // Load arrow image
             P->placePlayer(coor1,coor2);//place player
+
+            //cout << "in player" << endl;
+
             vecref.updateVecref(coor1, coor2, 'P');
+
+            //cout << "aft updVec" << endl;
 //-----------------------------------------------------------------------------------
 //this may need to get moved into the player class
             loctrackx[0] = coor1; loctrackx[1] = coor1;
             loctracky[0] = coor2; loctracky[1] = coor2;
 //-----------------------------------------------------------------------------------            updateVecref(coor1, coor2, 'P');//updates the vector units
             playercount++;
+
+            //cout << "end player" << endl;
             }
             else{
                 cout << "can not have more than one player.\n";
