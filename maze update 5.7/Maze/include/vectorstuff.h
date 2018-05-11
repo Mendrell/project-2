@@ -13,10 +13,8 @@ using namespace std;
 class vectorstuff
 {
     public:
-        vectorstuff()
-        {
-
-        }
+        vectorstuff();
+        virtual ~vectorstuff();
 
         vector<vector <units> > mastervec;
         units temp1;//old
@@ -69,6 +67,19 @@ class vectorstuff
             }
         units getvecpos(int x, int y) {
             return mastervec[x][y];
+        }
+
+        bool vectorMapisWallCollision(int inpX, int inpY)
+        {
+            return (getvecpos(inpX, inpY).print_unit() == '#');
+        }
+        bool vectorMapisEnemyCollision(int inpX, int inpY)
+        {
+            return (getvecpos(inpX, inpY).print_unit() == 'E');
+        }
+        bool vectorMapisPlayerCollision(int inpX, int inpY)
+        {
+            return (getvecpos(inpX, inpY).print_unit() == 'P');
         }
 
 

@@ -1,7 +1,7 @@
 #include "templateFunctions.h"
 
 using namespace std;
-
+/*
 templateFunctions::templateFunctions()
 {
     //ctor
@@ -11,7 +11,7 @@ templateFunctions::~templateFunctions()
 {
     //dtor
 }
-
+*/
 template<class T>
 void templateFunctions::unionVectors(vector <T> frontVec, vector <T> backVec, vector <T> &retVec)
 {

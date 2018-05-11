@@ -295,7 +295,7 @@ void init(int a)
         //cout << "eowHere" << endl;
 
    } // need to add a | to the end of the text file to act as and end character\
-  
+
     plyActs = {false, false, false, false, false};
     keysPressed = plyActs;
     canTakeAction = false;
@@ -526,15 +526,22 @@ int Print(int Array[]){
 
     }
     P->objectAction();
-	bool tempBool00 = false;
+	bool isPlayerBlocked = false;
 
+	/*
     for (int i = 0; i < W->size(); i++)
     {
         if (utilFunc.gridCollision(P->getObjCurrGridLoc(), W->at(i).getObjCurrGridLoc()))
             tempBool00 = true;
     }
+    */
+    //If it blocks you don't move
+    //If it kills you don't move
+    //If you kill it and you don't die, then move is okay
+    if (vecref.vectorMapisWallCollision(P->getObjCurrGridLoc().x, P->getObjCurrGridLoc().y))
+        isPlayerBlocked = true;
 
-    P->objectLogicAction(tempBool00);
+    P->objectLogicAction(isPlayerBlocked);
 
     if (!utilFunc.isSameGridLoc(P->getObjCurrGridLoc(), P->getObjOldGridLoc()))
      {
@@ -557,6 +564,8 @@ int Print(int Array[]){
         bool isBlockedMove;
         isBlockedMove = !utilFunc.isInGridBounds({M->getGridSize(), M->getGridSize()}, E->at(i).getObjNewGridLoc());
         //isBlockedMove = utilFunc.isInGridBounds({M->getGridSize(), M->getGridSize()}, E->at(i).getObjNewGridLoc());
+        if (vecref.vectorMapisWallCollision(E->at(i).getObjNewGridLoc().x, E->at(i).getObjNewGridLoc().y))
+            isBlockedMove = true;
 
          E->at(i).objectLogicAction(isBlockedMove);
 
