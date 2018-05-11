@@ -375,9 +375,12 @@ void display(void)
             P->drawArrow();
         glPopMatrix();
 
+        if (!gamewin)
+        {
          glPushMatrix();
            M->drawChest();
         glPopMatrix();
+        }
 
     if(!canshoot){
         glPushMatrix();
@@ -598,6 +601,11 @@ int Print(int Array[]){
 
     if ((P->getPlayerLoc().x == M->GetStArrwsLoc().x) && (P->getPlayerLoc().y == M->GetStArrwsLoc().y)){
         canshoot = true;
+        P->setHasAmmo(true);
+    }
+
+    if ((P->getPlayerLoc().x == M->GetChestLoc().x) && (P->getPlayerLoc().y == M->GetChestLoc().y)){
+        //gamewin = true;
     }
 
     P->objectLogicAction(isPlayerBlocked);

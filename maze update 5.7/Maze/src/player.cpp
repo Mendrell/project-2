@@ -25,6 +25,7 @@ Player::Player()
     canObjectAct = false;
     isObjectActing = false;
     classPlayerActions = {false, false, false, false, false};
+    hasAmmo = false;
 }
 
 Player::~Player()
@@ -338,7 +339,8 @@ void Player::objectAction()
         else if (classPlayerActions.shoot)
         {
             //setObjOldRealLoc(getObjCurrRealLoc());
-            shootArrow();
+            if (getHasAmmo())
+                shootArrow();
         }
         //isObjectActing = false;
         //classPlayerActions = {false, false, false, false, false};
@@ -495,4 +497,19 @@ bool Player::getIsProjDead()
 void Player::setIsProjDead(bool inpBool)
 {
     arrowStatus = !inpBool;
+}
+
+bool Player::getHasAmmo()
+{
+    return hasAmmo;
+}
+
+bool Player::setHasAmmo(bool inpBool)
+{
+    hasAmmo = inpBool;
+}
+
+void Player::timer()
+{
+
 }
