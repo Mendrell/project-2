@@ -33,6 +33,12 @@
 #include <tuple>
 #include <units.h>
 #include <vectorstuff.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <time.h>
+#include <unistd.h>
+#include <dos.h>
+#include <windows.h>
 
 #include <utilityFunctions.h>
 /* GLUT callback Handlers */
@@ -66,8 +72,11 @@ playerActions keysPressed;
 bool canTakeAction;
 bool actionInProgress;
 bool menuisopen;
+bool gamewin;
 bool gamestart=0;
-
+int chestlocationx;
+int chestlocationy;
+bool canshoot = false;
 void display(void);                             // Main Display : this runs in a loop
 
 int loctrackx[2] = {0,0};//AS tracks the past and current location of player x coordinate
@@ -185,6 +194,8 @@ void init(int a)
             checkBounds(coor1,coor2);
             M->loadChestImage("images/chest.png");              // load chest image
             M->placeChest(coor1,coor2);// place chest in a grid
+            chestlocationx = coor1;
+            chestlocationy = coor2;
 
             vecref.updateVecref(coor1, coor2, 'C');//updates the vector units
 
@@ -197,6 +208,7 @@ void init(int a)
             P->initPlayer(M->getGridSize(),6,"images/p.png");   // initialize player pass grid size,image and number of frames
             P->loadArrowImage("images/arr.png");                // Load arrow image
             P->placePlayer(coor1,coor2);//place player
+
 
             vecref.updateVecref(coor1, coor2, 'P');
 
@@ -313,7 +325,7 @@ void display(void)
          M->drawBackground();
         glPopMatrix();
 
-        if(!menuisopen){
+        if(!menuisopen && !gamewin){
         for(int i=0; i<W->size();i++)
         {
            W->at(i).drawWall();
@@ -340,15 +352,16 @@ void display(void)
            M->drawChest();
         glPopMatrix();
 
+    if(!canshoot){
         glPushMatrix();
            M->drawArrows();
         glPopMatrix();
+    }
         }
     glutSwapBuffers();
 }
 
-
-
+void returntomenu();
 
 void key(unsigned char key, int x, int y)
 {
@@ -357,17 +370,21 @@ void key(unsigned char key, int x, int y)
         case ' ':
             // if(!M->liveSetOfArrws)      // if setof arrows were picked by player
             //P->shootArrow();
+            if (canshoot){
             keysPressed.shoot = true;
             plyActs.shoot = true;
             canTakeAction = true;
+            }
 
         break;
         case 27 :                       // esc key to exit
         case 'q':
             exit(0);
             break;
+
         case 'm':
             if (menuisopen){
+
                 menuisopen=0;
                 //glClear (GL_COLOR_BUFFER_BIT);
             M->loadBackgroundImage("images/bak.jpg");
@@ -418,6 +435,10 @@ void key(unsigned char key, int x, int y)
     }
 
     glutPostRedisplay();
+}
+
+void returntomenu(){
+    key('m', 0, 0);
 }
 
 
@@ -546,6 +567,10 @@ int Print(int Array[]){
     {
         isPlayerBlocked = true;
         P->setIsObjDead(true);
+    }
+
+    if ((P->getPlayerLoc().x == M->GetStArrwsLoc().x) && (P->getPlayerLoc().y == M->GetStArrwsLoc().y)){
+        canshoot = true;
     }
 
     P->objectLogicAction(isPlayerBlocked);
@@ -740,9 +765,6 @@ int main(int argc, char *argv[])
    uFunc.displayGLQueue(tempRetSolution);
    vecref.convertQueueGLtoString(tempRetSolution, tempStrSol);
    uFunc.displayStrQueue(tempStrSol);
-
-
-
    glutDisplayFunc(display);                     //callback function for display
    glutReshapeFunc(resize);                      //callback for reshape
    glutKeyboardFunc(key);                        //callback function for keyboard
