@@ -34,8 +34,6 @@
 #include <units.h>
 #include <vectorstuff.h>
 
-#include <utilityFunctions.h>
-
 /* GLUT callback Handlers */
 
 using namespace std;
@@ -43,10 +41,12 @@ using namespace std;
 const int GENEMYLIMIT = 10;
 const int GWALLLIMIT = 100;
 
+//Maze *M = new Maze();                         // Set Maze grid size
 void updatepos(int x, int y);//AS this will update position 0 to the current position of the player
 void checkwallcollision();
 
-Maze *M = new Maze(15);                         // Set Maze grid size
+Maze *M = new Maze();                         // Set Maze grid size
+//Maze *M = new Maze(15);                         // Set Maze grid size
 Player *P = new Player();                       // create player
 
 wall W[GWALLLIMIT];                                    // wall with number of bricks
@@ -60,6 +60,8 @@ playerActions plyActs;
 playerActions keysPressed;
 bool canTakeAction;
 bool actionInProgress;
+bool menuisopen;
+bool gamestart=0;
 
 void display(void);                             // Main Display : this runs in a loop
 
@@ -118,10 +120,11 @@ void checkperim(units bin){//Dhanyu may be giving us a better check condition fo
 vector<units> morty(1);//all this vector does is hold the player position
 
 
-void init()
+void init(int a)
 {
+    if(!gamestart){
+    gamestart=1;
     glEnable(GL_COLOR_MATERIAL);
-
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
     glShadeModel(GL_SMOOTH);
     glEnable(GL_LINE_SMOOTH);
@@ -136,6 +139,8 @@ void init()
 
     glEnable(GL_BLEND);                                 //display images with transparent
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    }
+    string level[4] = {"mapgen.txt","mapgen2.txt","mapgen3.txt","mapgen4.txt"};
 
     M->loadBackgroundImage("images/bak.jpg");           // Load maze background image
     ifstream bob;//AS initializes a file called bob
@@ -147,9 +152,20 @@ void init()
 
 
 
+    int tempCount00 = 0;
     while(bob >> comm >> coor1 >> coor2){
 
-        if (comm == "chest"){//needs to be lower case
+        //cout << tempCount00 << endl;
+        //cout << M->getGridSize() << " " << comm << " " << coor1 << " " << coor2 << endl;
+        tempCount00++;
+        //cout << M->getGridSize() << " " << comm << " " << coor1 << " " << coor2 << endl;
+        if(comm == "grid"){
+
+            M->setgrid(coor1);
+            vecref.init2dvec(coor1);
+        }
+
+        else if (comm == "chest"){//needs to be lower case
             checkBounds(coor1,coor2);
             M->loadChestImage("images/chest.png");              // load chest image
             M->placeChest(coor1,coor2);// place chest in a grid
@@ -163,13 +179,20 @@ void init()
             P->initPlayer(M->getGridSize(),6,"images/p.png");   // initialize player pass grid size,image and number of frames
             P->loadArrowImage("images/arr.png");                // Load arrow image
             P->placePlayer(coor1,coor2);//place player
+
+            //cout << "in player" << endl;
+
             vecref.updateVecref(coor1, coor2, 'P');
+
+            //cout << "aft updVec" << endl;
 //-----------------------------------------------------------------------------------
 //this may need to get moved into the player class
             loctrackx[0] = coor1; loctrackx[1] = coor1;
             loctracky[0] = coor2; loctracky[1] = coor2;
 //-----------------------------------------------------------------------------------            updateVecref(coor1, coor2, 'P');//updates the vector units
             playercount++;
+
+            //cout << "end player" << endl;
             }
             else{
                 cout << "can not have more than one player.\n";
@@ -276,7 +299,7 @@ void display(void)
          M->drawBackground();
         glPopMatrix();
 
-
+        if(!menuisopen){
         for(int i=0; i<wallcount;i++)
         {
            W[i].drawWall();
@@ -306,7 +329,7 @@ void display(void)
         glPushMatrix();
            M->drawArrows();
         glPopMatrix();
-
+        }
     glutSwapBuffers();
 }
 
@@ -329,6 +352,55 @@ void key(unsigned char key, int x, int y)
         case 'q':
             exit(0);
             break;
+        case 'm':
+            if (menuisopen){
+                menuisopen=0;
+                //glClear (GL_COLOR_BUFFER_BIT);
+            M->loadBackgroundImage("images/bak.jpg");
+            //glPushMatrix();
+            M->drawBackground();
+            //glPopMatrix();
+                break;
+                }
+            //glClear (GL_COLOR_BUFFER_BIT);
+            M->loadBackgroundImage("images/menu.jpg");
+            //glPushMatrix();
+            M->drawBackground();
+            //glPopMatrix();
+            menuisopen=1;
+            break;
+        case '1':
+            if (menuisopen){
+                wallclear(W, wallcount);
+                enemyclear(E, enemycount);
+                init(0);
+                menuisopen=0;
+            } break;
+
+
+        case '2':
+            if (menuisopen){
+                wallclear(W, wallcount);
+                enemyclear(E, enemycount);
+                init(1);
+                menuisopen=0;
+            }break;
+
+        case '3':
+            if (menuisopen){
+                wallclear(W, wallcount);
+                enemyclear(E, enemycount);
+                init(2);
+                menuisopen=0;
+            } break;
+
+        case '4':
+            if (menuisopen){
+                wallclear(W, wallcount);
+                enemyclear(E, enemycount);
+                init(3);
+                menuisopen=0;
+            } break;
     }
 
     glutPostRedisplay();
@@ -366,7 +438,7 @@ int Print(int Array[]){
  void idle(void)
 {
 
-    utilityFunctions utilFunc;
+
      //vecref.display2DVec();
 
      //system("cls");
@@ -433,14 +505,6 @@ int Print(int Array[]){
     {
         P->setActionStatus(plyActs, canTakeAction);
 
-        cout << P->getObjCurrGridLoc().x << " " << P->getObjCurrGridLoc().y << endl;
-        /*
-        for (int i = 0; i < GWALLLIMIT; i++)
-        {
-            cout << W[i].getObjCurrGridLoc().x << " " << W[i].getObjCurrGridLoc().y << endl;
-        }
-        */
-
         if((loctrackx[0] != loctrackx[1]) || (loctracky[0] != loctracky[1])){//makes it so that the enemy only moves when the player enter a new square
             for (int i = 0; i < GENEMYLIMIT; i++)
             {
@@ -450,18 +514,7 @@ int Print(int Array[]){
 
     }
     P->objectAction();
-
-    bool tempBool00 = false;
-
-    for (int i = 0; i < GWALLLIMIT; i++)
-    {
-        if (utilFunc.gridCollision(P->getObjCurrGridLoc(), W[i].getObjCurrGridLoc()))
-            tempBool00 = true;
-    }
-
-
-    P->objectLogicAction(tempBool00);
-    for (int i = 0; i < GENEMYLIMIT; i++)
+    for (int i = 0; i < enemycount; i++)
     {
         E[i].objectAction(vecref,vecref.getvecpos(E[i].getEnemyLoc().x, E[i].getEnemyLoc().y), morty);
 
@@ -638,7 +691,7 @@ int main(int argc, char *argv[])
    glutInitWindowSize (800, 800);                //window screen
    glutInitWindowPosition (100, 100);            //window position
    glutCreateWindow ("Maze");                    //program title
-   init();
+   init(1);
 
    glutDisplayFunc(display);                     //callback function for display
    glutReshapeFunc(resize);                      //callback for reshape

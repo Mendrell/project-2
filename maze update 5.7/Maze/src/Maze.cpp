@@ -193,4 +193,14 @@ loc Maze::converter(int x, int y)
        return val;
 }
 
+void Maze::setgrid(int gSize)                                        // Constructor
+{
+    //ctor
+    gridSize =gSize;
+
+    unitWidth = (float)2/gridSize;
+    liveChest = true;
+    liveSetOfArrws=true;
+}
+
 

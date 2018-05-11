@@ -45,6 +45,7 @@ class Maze
       float spin;                         // for spin chest
       bool liveChest;                     // status of the chest (collected or not)
       bool liveSetOfArrws;                // status of the arrows(collected or not)
+      void setgrid(int gSize);
 
 
     protected:

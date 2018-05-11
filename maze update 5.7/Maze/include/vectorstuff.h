@@ -24,6 +24,7 @@ class vectorstuff
             }
 
         void init2dvec(int x){
+                mastervec.clear();
                 for(int i=0; i<x;i++){//AS this initializes an empty 2d vector
                     vector<units> tempvec;
                     for (int j = 0; j<x;j++){
