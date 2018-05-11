@@ -295,6 +295,7 @@ void init(int a)
         //cout << "eowHere" << endl;
 
    } // need to add a | to the end of the text file to act as and end character\
+  
     plyActs = {false, false, false, false, false};
     keysPressed = plyActs;
     canTakeAction = false;
