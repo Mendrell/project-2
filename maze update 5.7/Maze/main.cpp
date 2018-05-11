@@ -540,6 +540,11 @@ int Print(int Array[]){
     //If you kill it and you don't die, then move is okay
     if (vecref.vectorMapisWallCollision(P->getObjCurrGridLoc().x, P->getObjCurrGridLoc().y))
         isPlayerBlocked = true;
+    if (vecref.vectorMapisEnemyCollision(P->getObjCurrGridLoc().x, P->getObjCurrGridLoc().y))
+    {
+        isPlayerBlocked = true;
+        P->setIsObjDead(true);
+    }
 
     P->objectLogicAction(isPlayerBlocked);
 
@@ -565,6 +570,13 @@ int Print(int Array[]){
         isBlockedMove = !utilFunc.isInGridBounds({M->getGridSize(), M->getGridSize()}, E->at(i).getObjNewGridLoc());
         //isBlockedMove = utilFunc.isInGridBounds({M->getGridSize(), M->getGridSize()}, E->at(i).getObjNewGridLoc());
         if (vecref.vectorMapisWallCollision(E->at(i).getObjNewGridLoc().x, E->at(i).getObjNewGridLoc().y))
+            isBlockedMove = true;
+        if (vecref.vectorMapisPlayerCollision(E->at(i).getObjNewGridLoc().x, E->at(i).getObjNewGridLoc().y))
+        {
+            isBlockedMove = true;
+            P->setIsObjDead(true);
+        }
+        if (vecref.vectorMapisEnemyCollision(E->at(i).getObjNewGridLoc().x, E->at(i).getObjNewGridLoc().y))
             isBlockedMove = true;
 
          E->at(i).objectLogicAction(isBlockedMove);
@@ -710,6 +722,11 @@ int main(int argc, char *argv[])
    glutInitWindowPosition (100, 100);            //window position
    glutCreateWindow ("Maze");                    //program title
    init(1);
+
+   queue < GridLoc > tempRetSolution;
+   utilityFunctions uFunc;
+   vecref.pathFinding({1, 12}, {10, 10}, tempRetSolution);
+   uFunc.displayGLQueue(tempRetSolution);
 
    glutDisplayFunc(display);                     //callback function for display
    glutReshapeFunc(resize);                      //callback for reshape

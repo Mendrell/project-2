@@ -1,13 +1,82 @@
 #ifndef VECTORSTUFF_H
 #define VECTORSTUFF_H
 #include <units.h>
-#include <vector>
+//#include <vector>
 #include <string>
 #include <iostream>
 #include <Maze.h>
+#include <queue>
 
 
 using namespace std;
+
+struct graphCoord
+{
+	int x;
+	int y;
+
+	bool operator == (const graphCoord a) const
+	{
+		return (a.y == y && a.x == x);
+	}
+
+	graphCoord operator + (const graphCoord a) const
+	{
+		graphCoord retCoord;
+		retCoord = {x + a.x, y + a.y};
+		return retCoord;
+	}
+
+	graphCoord operator - (const graphCoord a) const
+	{
+		graphCoord retCoord;
+		retCoord = {x - a.x, y - a.y};
+		return retCoord;
+	}
+
+	friend ostream& operator<<(ostream &out, graphCoord gC)
+	{
+		out << gC.x;
+		out << ':';
+		out << gC.y;
+
+		return out; //return a reference to the output stream
+	}
+};
+
+struct priorityCoordObject
+{
+	queue < graphCoord > path;
+	int priority;
+
+	bool operator < (const priorityCoordObject &a) const
+	{
+		return (priority < a.priority);
+	}
+	bool operator == (const priorityCoordObject &a) const
+	{
+		return (path.back() == a.path.back());
+	}
+	friend ostream& operator<<(ostream &out, const priorityCoordObject &a)
+	{
+		out << a.priority;
+		//out << ':';
+		//out << gC.y;
+
+		return out; //return a reference to the output stream
+	}
+};
+
+struct graphDimensions
+{
+	int width;
+	int height;
+};
+struct cartCoord
+{
+	double x;
+	double y;
+};
 
 
 class vectorstuff
@@ -21,6 +90,8 @@ class vectorstuff
         units temp2;//new
         bool bs = false;
         int test;
+
+        void pathFinding(GridLoc startPos, GridLoc endPos, queue < GridLoc > &retSolution);
 
          void crap(){
             mastervec[temp1.x][temp1.y] = temp1;
@@ -87,6 +158,24 @@ class vectorstuff
     protected:
 
     private:
+
+        void convertUnitMapToIntMap(vector < vector < units > > inpUnitMap, vector < vector < int > > &retIntMap);
+        GridLoc convertGCtoGL(graphCoord inpCoord);
+        graphCoord convertGLtoGC(GridLoc inpCoord);
+        void convertQueueGCtoGL(queue < graphCoord > inpQueue, queue < GridLoc > &retQueue);
+        void convertQueueGLtoGC(queue < GridLoc > inpQueue, queue < graphCoord > &retQueue);
+
+        void basicDijkstra(vector < vector < int > > inpGraph, graphCoord startPos, vector <graphCoord> endPos, queue < graphCoord > &retSolution);
+
+        void expandGraphLoc(vector < vector < int > > inpGraph, graphCoord inpCoord, vector < graphCoord > &retExpansion);
+        int characterParser(char inpChar);
+
+        int taxiDistanceGraphCoord(graphCoord inpStartPos, graphCoord inpEndPos);
+        int minTaxiDistGC(graphCoord inpStartPos, vector < graphCoord > inpEndPos);
+
+        bool isInPQGC(priority_queue <priorityCoordObject> inpQueue, graphCoord inpElement);
+        char intParser(int inpInt);
+
         //vector<vector <units> > mastervec;
 };
 
