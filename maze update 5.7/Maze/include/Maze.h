@@ -48,6 +48,12 @@ class Maze
       void setgrid(int gSize);
 
 
+    void setFoundChest(bool inpBool);
+    bool getFoundChest();
+
+    void setFoundAmmo(bool inpBool);
+    bool getFoundAmmo();
+
     protected:
 
       int gridSize;                       // grid size
@@ -61,6 +67,9 @@ class Maze
       loc chestLoc;                        // chest Location
       loc setOfArrsLoc;                    // arrows Location
       loc converter(int, int);             // convert grid size to viewport
+
+      bool foundChest;
+      bool foundAmmo;
 };
 
 #endif // MAZE_H

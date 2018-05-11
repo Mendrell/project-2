@@ -70,6 +70,9 @@ class Player
         bool getIsProjDead();
         void setIsProjDead(bool inpBool);
 
+        bool getHasAmmo();
+        bool setHasAmmo(bool inpBool);
+
     protected:
 
         float t;                           // Ticker for animation
@@ -106,6 +109,8 @@ class Player
         loc objCurrRealLoc;
         loc objOldRealLoc;
         loc objNewRealLoc;
+
+        bool hasAmmo;
 };
 
 #endif // PLAYER_H
