@@ -1,4 +1,5 @@
 #include "utilityFunctions.h"
+#include <math.h>       /* ceil */
 
 utilityFunctions::utilityFunctions()
 {
@@ -62,4 +63,21 @@ void utilityFunctions::displayStrQueue(queue<string>inpQueue)
         inpQueue.pop();
     }
     cout << endl;
+}
+
+GridLoc utilityFunctions::realToGrid(loc inpRealLoc, int inpGridSize)
+{
+    GridLoc val;
+    double inpUnitWidth = calcUnitWidth(inpGridSize);
+   val.x = (int)(ceil((inpRealLoc.x +(1-inpUnitWidth))/inpUnitWidth));
+   val.y = (int)(ceil((inpRealLoc.y +(1-inpUnitWidth))/inpUnitWidth));
+
+    return val;
+}
+
+double utilityFunctions::calcUnitWidth(int inpGridSize)
+{
+    double unitWidth;
+    unitWidth = (double)2.0/inpGridSize;
+    return unitWidth;
 }
