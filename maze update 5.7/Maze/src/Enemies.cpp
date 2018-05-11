@@ -477,3 +477,12 @@ void Enemies::setObjTravelPath(queue<string>inpPath)
     objTravelPath = inpPath;
 }
 
+bool Enemies::getIsObjDead()
+{
+    return !live;
+}
+
+void Enemies::setIsObjDead(bool inpBool)
+{
+    live = !inpBool;
+}
