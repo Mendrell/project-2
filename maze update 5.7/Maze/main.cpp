@@ -1,6 +1,11 @@
 /*
  * MAZE Game Framework
  * Written by Dr. Dhanyu Amarasinghe Spring 2018
+
+ NM: 051018: changed it so that keys do not directly call any function
+    strong advice, have the keys only set flags
+    have the flags determine where a function should be called in idle()
+
  */
 
 #include <string.h>
@@ -38,6 +43,9 @@ using namespace std;
 const int GENEMYLIMIT = 10;
 const int GWALLLIMIT = 100;
 
+void updatepos(int x, int y);//AS this will update position 0 to the current position of the player
+void checkwallcollision();
+
 Maze *M = new Maze(15);                         // Set Maze grid size
 Player *P = new Player();                       // create player
 
@@ -49,6 +57,7 @@ float wWidth, wHeight;                          // display window width and Heig
 float xPos,yPos;                                // Viewpoar mapping
 
 playerActions plyActs;
+playerActions keysPressed;
 bool canTakeAction;
 bool actionInProgress;
 
@@ -254,6 +263,7 @@ void init()
     vecref.init2dvec(M->getGridSize());//AS initializes the 2d vector to blank spaces
 //cout << "you are inside";
     plyActs = {false, false, false, false, false};
+    keysPressed = plyActs;
     canTakeAction = false;
     actionInProgress = false;
 }
@@ -310,6 +320,7 @@ void key(unsigned char key, int x, int y)
         case ' ':
             // if(!M->liveSetOfArrws)      // if setof arrows were picked by player
             //P->shootArrow();
+            keysPressed.shoot = true;
             plyActs.shoot = true;
             canTakeAction = true;
 
@@ -360,6 +371,63 @@ int Print(int Array[]){
 
      //system("cls");
      morty[0] = vecref.getvecpos(P->getPlayerLoc().x, P->getPlayerLoc().y);
+
+     /*
+    if (keysPressed.moveUp)
+    {
+        //if(P->playerCollision(3,3))break;
+         updatepos(P->getPlayerLoc().x, P->getPlayerLoc().y);
+         //displayloctrack();
+
+         if((loctrackx[0] != loctrackx[1]) || (loctracky[0] != loctracky[1])){//makes it so that the enemy only moves when the player enter a new square
+            vecref.updateVecref(loctrackx[1], loctracky[1], '_');//updates the vecref in real time
+            vecref.updateVecref(loctrackx[0], loctracky[0], 'P');
+        }
+        updateenemyvecmain();//there may be a better place to put this
+    }
+    if (keysPressed.moveDown)
+    {
+        //if(P->playerCollision(3,3))break;
+         checkwallcollision();
+         updatepos(P->getPlayerLoc().x, P->getPlayerLoc().y);
+         //displayloctrack();
+
+         if((loctrackx[0] != loctrackx[1]) || (loctracky[0] != loctracky[1])){//makes it so that the enemy only moves when the player enter a new square
+            vecref.updateVecref(loctrackx[1], loctracky[1], '_');
+            vecref.updateVecref(loctrackx[0], loctracky[0], 'P');
+        }
+        updateenemyvecmain();//there may be a better place to put this
+    }
+    if (keysPressed.moveLeft)
+    {
+        //if(P->playerCollision(3,3))break;
+        checkwallcollision();
+        updatepos(P->getPlayerLoc().x, P->getPlayerLoc().y);
+        //displayloctrack();
+
+        if((loctrackx[0] != loctrackx[1]) || (loctracky[0] != loctracky[1])){//makes it so that the enemy only moves when the player enter a new square
+        vecref.updateVecref(loctrackx[1], loctracky[1], '_');
+        vecref.updateVecref(loctrackx[0], loctracky[0], 'P');
+        }
+        updateenemyvecmain();//there may be a better place to put this
+    }
+    if (keysPressed.moveRight)
+    {
+        //if(P->playerCollision(3,3))break;
+         checkwallcollision();
+         updatepos(P->getPlayerLoc().x, P->getPlayerLoc().y);
+         //displayloctrack();
+
+         if((loctrackx[0] != loctrackx[1]) || (loctracky[0] != loctracky[1])){//makes it so that the enemy only moves when the player enter a new square
+            vecref.updateVecref(loctrackx[1], loctracky[1], '_');
+            vecref.updateVecref(loctrackx[0], loctracky[0], 'P');
+        }
+        updateenemyvecmain();//there may be a better place to put this
+    }
+    if (keysPressed.shoot)
+    {
+    }
+    */
 
     if (canTakeAction)
     {
@@ -468,6 +536,7 @@ void Specialkeys(int key, int x, int y)
     switch(key)
     {
     case GLUT_KEY_UP:
+        /*
           if(P->playerCollision(3,3))break;
          updatepos(P->getPlayerLoc().x, P->getPlayerLoc().y);
          //displayloctrack();
@@ -481,12 +550,15 @@ void Specialkeys(int key, int x, int y)
          //E[0].moveEnemy("up");
          //E[1].moveEnemy("up");
          //E[2].moveEnemy("up");
+         */
+         keysPressed.moveUp = true;
          plyActs.moveUp = true;
         canTakeAction = true;
         annoying = false;
     break;
 
     case GLUT_KEY_DOWN:
+        /*
          if(P->playerCollision(3,3))break;
          checkwallcollision();
          updatepos(P->getPlayerLoc().x, P->getPlayerLoc().y);
@@ -497,15 +569,18 @@ void Specialkeys(int key, int x, int y)
             vecref.updateVecref(loctrackx[0], loctracky[0], 'P');
         }
         updateenemyvecmain();//there may be a better place to put this
+        */
          //P->movePlayer("down");
          //E[0].moveEnemy("down");
          //E[1].moveEnemy("down");
          //E[2].moveEnemy("down");
+         keysPressed.moveDown = true;
          plyActs.moveDown = true;
         canTakeAction = true;
     break;
 
     case GLUT_KEY_LEFT:
+        /*
          if(P->playerCollision(3,3))break;
          checkwallcollision();
          updatepos(P->getPlayerLoc().x, P->getPlayerLoc().y);
@@ -520,11 +595,14 @@ void Specialkeys(int key, int x, int y)
          //E[0].moveEnemy("left");
          //E[1].moveEnemy("left");
          //E[2].moveEnemy("left");
+         */
+         keysPressed.moveLeft = true;
          plyActs.moveLeft = true;
         canTakeAction = true;
     break;
 
     case GLUT_KEY_RIGHT:
+        /*
          if(P->playerCollision(3,3))break;
          checkwallcollision();
          updatepos(P->getPlayerLoc().x, P->getPlayerLoc().y);
@@ -535,10 +613,12 @@ void Specialkeys(int key, int x, int y)
             vecref.updateVecref(loctrackx[0], loctracky[0], 'P');
         }
         updateenemyvecmain();//there may be a better place to put this
+        */
          //P->movePlayer("right");
          //E[0].moveEnemy("right");
          //E[1].moveEnemy("right");
          //E[2].moveEnemy("right");
+         keysPressed.moveRight = true;
         plyActs.moveRight = true;
         canTakeAction = true;
     break;
@@ -570,4 +650,3 @@ int main(int argc, char *argv[])
 
    return EXIT_SUCCESS;
 }
-  
