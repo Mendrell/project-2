@@ -24,6 +24,12 @@ typedef struct
 
 typedef struct
 {
+  float width;
+  float height;
+}cartRealDim2d;
+
+typedef struct
+{
   int x;
   int y;
 }GridLoc;
@@ -73,19 +79,6 @@ static GLuint TextureLoader(char* FileName)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 
     return tex;
-}
-
-template <class T>
-void enemyclear(T* a, int n){
-    for(int i=0;i<n;i++){
-        a[i].live=0;
-    }
-}
-template <class T>
-void wallclear(T* a, int n){
-    for(int i=0;i<n;i++){
-        a[i].liveWall=0;
-    }
 }
 
 #endif // COMMONTHINGS_H
