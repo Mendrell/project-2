@@ -61,6 +61,7 @@ class Enemies
 
     private:
         void changeDirection();
+        GridLoc realToGrid(loc inpRealLoc);
 
         int frames;                        // number of frames generally
         float t;                           // steps for animation count

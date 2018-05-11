@@ -83,15 +83,21 @@ static GLuint TextureLoader(char* FileName)
 
 template <class T>
 void enemyclear(T* a, int n){
+    /*
     for(int i=0;i<n;i++){
         a[i].live=0;
     }
+    */
+    a->clear();
 }
 template <class T>
 void wallclear(T* a, int n){
+    /*
     for(int i=0;i<n;i++){
         a[i].liveWall=0;
     }
+    */
+    a->clear();
 }
 
 #endif // COMMONTHINGS_H

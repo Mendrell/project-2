@@ -26,7 +26,9 @@ Enemies::Enemies()
     up= down = left=right=false;
     live = true;
 
-    objectTimer = new Timer();
+    //objectTimer = new Timer();
+    objectTimer = NULL;
+
     objectDirectionFaced = 6;
     canObjectAct = false;
     isObjectActing = false;
@@ -39,11 +41,13 @@ Enemies::Enemies()
 Enemies::~Enemies()
 {
     //dtor
-    delete objectTimer;
+    if (objectTimer != NULL)
+        delete objectTimer;
 }
 
 void Enemies::initEnm(int grid,int numFrames, char * FileName)
 {
+    objectTimer = new Timer();
     gridSize = grid;
     frames = numFrames;
     xmax =1/(float)frames;
@@ -97,6 +101,10 @@ void Enemies::placeEnemy(int x, int y)
 
     setObjCurrGridLoc({x, y});
     setObjCurrRealLoc(enmLoc);
+    setObjOldGridLoc(getObjCurrGridLoc());
+    setObjOldRealLoc(getObjCurrRealLoc());
+    setObjNewGridLoc(getObjCurrGridLoc());
+    setObjNewRealLoc(getObjCurrRealLoc());
 }
 
 void Enemies::moveEnemy(string dir)
@@ -198,11 +206,15 @@ if(up)
 
 GridLoc Enemies::getEnemyLoc()
 {
+    /*
    GridLoc val;
    val.x = (int)(ceil((enmLoc.x +(1-unitWidth))/unitWidth));
    val.y = (int)(ceil((enmLoc.y +(1-unitWidth))/unitWidth));
 
     return val;
+    */
+
+    return realToGrid(enmLoc);
 }
 
 bool Enemies::getIsObjectActing()
@@ -237,10 +249,12 @@ void Enemies::enemyupdatepos(int x, int y){//AS this will update position 0 to t
 
 void Enemies::objectAction(vectorstuff bash, units curenemypos, vector<units> playerpos)
 {
+    setObjOldGridLoc(getEnemyLoc()); //store old location
+    setObjOldRealLoc(enmLoc); //in case it needs to be reverted to
     if (canObjectAct)
     {
-        setObjOldGridLoc(getEnemyLoc()); //store old location
-        setObjOldRealLoc(enmLoc); //in case it needs to be reverted to
+        //setObjOldGridLoc(getEnemyLoc()); //store old location
+        //setObjOldRealLoc(enmLoc); //in case it needs to be reverted to
 
         //canObjectAct = false;
         enemyai moveai;
@@ -283,34 +297,53 @@ void Enemies::objectAction(vectorstuff bash, units curenemypos, vector<units> pl
             //cout << "something is not working right";
             objectGenericCounter = 2;
 
+        //cout << "start " << getEnemyLoc().x << " " << getEnemyLoc().y << endl;
+
+        loc tempLoc00;
         switch (objectGenericCounter)
         {
             case 0:
                 //if (objectDirectionFaced != 3)  //to change direction facing without moving
                 moveEnemy("right");
+                tempLoc00 = getObjCurrRealLoc();
+                tempLoc00.x += unitWidth;
+                setObjNewRealLoc(tempLoc00);
                 objectGenericCounter++;
                 break;
             case 1:
                 moveEnemy("up");
+                tempLoc00 = getObjCurrRealLoc();
+                tempLoc00.y += unitWidth;
+                setObjNewRealLoc(tempLoc00);
                 objectGenericCounter++;
                 break;
             case 2:
                 moveEnemy("left");
+                tempLoc00 = getObjCurrRealLoc();
+                tempLoc00.x -= unitWidth;
+                setObjNewRealLoc(tempLoc00);
                 objectGenericCounter++;
                 break;
             case 3:
                 moveEnemy("down");
+                tempLoc00 = getObjCurrRealLoc();
+                tempLoc00.x -= unitWidth;
+                setObjNewRealLoc(tempLoc00);
                 objectGenericCounter++;
                 break;
         }
+
+        //cout << "end " << getEnemyLoc().x << " " << getEnemyLoc().y << endl;
         //objectGenericCounter++;
 
         //store the current locations
-        setObjCurrRealLoc(enmLoc);
-        setObjCurrGridLoc(getEnemyLoc());
+        //setObjCurrRealLoc(enmLoc);
+        //setObjCurrGridLoc(getEnemyLoc());
+
+
     }
-
-
+    setObjCurrRealLoc(enmLoc);
+    setObjCurrGridLoc(getEnemyLoc());
 }
 
 void Enemies::objectLogicAction(bool isBlockCollision)
@@ -324,6 +357,10 @@ void Enemies::objectLogicAction(bool isBlockCollision)
         else
         {
             //setObjCurrRealLoc(getObjOldRealLoc());
+            setObjNewRealLoc(getObjOldRealLoc());
+            setObjNewGridLoc(getObjOldGridLoc());
+            setObjCurrRealLoc(getObjOldRealLoc());
+            setObjCurrGridLoc(getObjOldGridLoc());
         }
 
         canObjectAct = false;
@@ -351,12 +388,13 @@ GridLoc Enemies::getObjCurrGridLoc()
 
 GridLoc Enemies::getObjNewGridLoc()
 {
-    return objOldGridLoc;
+    //return objNewGridLoc;
+    return realToGrid(objNewRealLoc);
 }
 
 GridLoc Enemies::getObjOldGridLoc()
 {
-    return objNewGridLoc;
+    return objOldGridLoc;
 }
 
 void Enemies::setObjCurrGridLoc(GridLoc inpGridLoc)
@@ -403,4 +441,13 @@ void Enemies::setObjNewRealLoc(loc inpRealLoc)
 void Enemies::setObjOldRealLoc(loc inpRealLoc)
 {
     objOldRealLoc = inpRealLoc;
+}
+
+GridLoc Enemies::realToGrid(loc inpRealLoc)
+{
+    GridLoc val;
+   val.x = (int)(ceil((inpRealLoc.x +(1-unitWidth))/unitWidth));
+   val.y = (int)(ceil((inpRealLoc.y +(1-unitWidth))/unitWidth));
+
+    return val;
 }

@@ -50,8 +50,10 @@ Maze *M = new Maze();                         // Set Maze grid size
 //Maze *M = new Maze(15);                         // Set Maze grid size
 Player *P = new Player();                       // create player
 
-wall W[GWALLLIMIT];                                    // wall with number of bricks
-Enemies E[GENEMYLIMIT];                                  // create number of enemies
+//wall W[GWALLLIMIT];                                    // wall with number of bricks
+//Enemies E[GENEMYLIMIT];                                  // create number of enemies
+vector < wall > *W = new vector < wall >;
+vector < Enemies > *E = new vector < Enemies >;
 Timer *T0 = new Timer();                        // animation timer
 
 float wWidth, wHeight;                          // display window width and Height
@@ -103,12 +105,12 @@ void checkBounds (int x, int y){
 vectorstuff vecref;//AS declares the vector we keep track of everything in
 
 void updateenemyvecmain(){//AS i dont know why but this function has to be passed in main or it wont work
-    for(int i = 0; i < enemycount; i++){
-            int curx = E[i].getEnemyLoc().x;
-            int cury = E[i].getEnemyLoc().y;
-            E[i].updateEnemyVecPos(vecref, curx, cury);
-            vecref.updateVecref(E[i].enemyloctrackx[1], E[i].enemyloctracky[1], '_');
-            vecref.updateVecref(E[i].enemyloctrackx[0], E[i].enemyloctracky[0], 'E');
+    for(int i = 0; i < E->size(); i++){
+            int curx = E->at(i).getEnemyLoc().x;
+            int cury = E->at(i).getEnemyLoc().y;
+            E->at(i).updateEnemyVecPos(vecref, curx, cury);
+            vecref.updateVecref(E->at(i).enemyloctrackx[1], E->at(i).enemyloctracky[1], '_');
+            vecref.updateVecref(E->at(i).enemyloctrackx[0], E->at(i).enemyloctracky[0], 'E');
 
         }
 }
@@ -153,13 +155,15 @@ void init(int a)
 
 
 
+    enemycount = 0;
     int tempCount00 = 0;
+    Enemies tempEnemy00;
     while(bob >> comm >> coor1 >> coor2){
 
         //cout << tempCount00 << endl;
-        //cout << M->getGridSize() << " " << comm << " " << coor1 << " " << coor2 << endl;
         tempCount00++;
-        //cout << M->getGridSize() << " " << comm << " " << coor1 << " " << coor2 << endl;
+        //cout << tempCount00 << endl;
+        //cout << comm << " " << coor1 << " " << coor2 << endl;
         if(comm == "grid"){
 
             M->setgrid(coor1);
@@ -173,6 +177,8 @@ void init(int a)
 
             vecref.updateVecref(coor1, coor2, 'C');//updates the vector units
 
+            //cout << "chere00" << endl;
+
         }
         else if (comm == "player"){
             if(playercount <= 1){
@@ -181,11 +187,8 @@ void init(int a)
             P->loadArrowImage("images/arr.png");                // Load arrow image
             P->placePlayer(coor1,coor2);//place player
 
-            //cout << "in player" << endl;
-
             vecref.updateVecref(coor1, coor2, 'P');
 
-            //cout << "aft updVec" << endl;
 //-----------------------------------------------------------------------------------
 //this may need to get moved into the player class
             loctrackx[0] = coor1; loctrackx[1] = coor1;
@@ -193,7 +196,6 @@ void init(int a)
 //-----------------------------------------------------------------------------------            updateVecref(coor1, coor2, 'P');//updates the vector units
             playercount++;
 
-            //cout << "end player" << endl;
             }
             else{
                 cout << "can not have more than one player.\n";
@@ -213,21 +215,33 @@ void init(int a)
         else if (comm == "enemy"){
             checkBounds(coor1,coor2);
             if(enemycount < GENEMYLIMIT){
+                /*
                 E[enemycount].initEnm(M->getGridSize(),4,"images/e.png"); //Load enemy image
                 E[enemycount].placeEnemy(coor1,coor2);
                 int curx = E[enemycount].getEnemyLoc().x;
                 int cury = E[enemycount].getEnemyLoc().y;
                 E[enemycount].enemyupdatepos(curx, cury);
-                //E[enemycount].updateEnemyVecPos(vecref, curx, cury);
+                */
+
+                //Enemies tempEnemy00;
+                //E->push_back(Enemies());
+                E->push_back(tempEnemy00);
+                E->back().initEnm(M->getGridSize(),4,"images/e.png"); //Load enemy image
+                E->back().placeEnemy(coor1,coor2);
+                int curx = E->back().getEnemyLoc().x;
+                int cury = E->back().getEnemyLoc().y;
+                //E->back().enemyupdatepos(curx, cury);
+
                 vecref.updateVecref(coor1, coor2, 'E');//updates the vector units
 
-                //E[enemycount].enemyloctrackx[1] = 0; E[enemycount].enemyloctrackx[1] = 0;
-                //E[enemycount].enemyloctracky[0] = 0; E[enemycount].enemyloctracky[0] = 0;
-                     /*cout << E[0].enemyloctrackx << " " << E[0].enemyloctracky << endl;
-                     cout << enemycount <<endl;*/
-                    //cout << E[0].getEnemyLoc().x << " " << E[0].getEnemyLoc().y << endl;
-
                 enemycount++;
+
+                cout << E->back().getEnemyLoc().x << " " << E->back().getEnemyLoc().y << endl;
+                cout << E->back().getObjCurrGridLoc().x << " " <<  E->back().getObjCurrGridLoc().y << endl;
+                cout << E->back().getObjOldGridLoc().x << " " <<  E->back().getObjOldGridLoc().y << endl;
+                cout << E->back().getObjCurrRealLoc().x << " " <<  E->back().getObjCurrRealLoc().y << endl;
+                cout << E->back().getObjOldRealLoc().x << " " <<  E->back().getObjOldRealLoc().y << endl;
+                //cout << "ehere01" << endl;
             }
             else{
                 cout << "too many enemies!\n";
@@ -243,8 +257,14 @@ void init(int a)
             checkBounds(coor1,coor2);
             int maxwall = M->getGridSize();
             if(wallcount < GWALLLIMIT){
+                /*
                 W[wallcount].wallInit(M->getGridSize(),"images/wall.png");// Load walls
                 W[wallcount].placeWall(coor1,coor2);// place each brick
+                */
+
+                W->push_back(wall());
+                W->back().wallInit(M->getGridSize(),"images/wall.png");// Load walls
+                W->back().placeWall(coor1,coor2);// place each brick
 
                 vecref.updateVecref(coor1, coor2, '#');//updates the vector units
 
@@ -254,10 +274,7 @@ void init(int a)
                 cout << "too many walls!";
                 system("pause");
                 exit(EXIT_FAILURE);
-        /*for(int i=1; i< M->getGridSize();i++)
-            {
-              W[i].wallInit(M->getGridSize(),"images/wall.png");// Load walls
-              W[i].placeWall(i,coor2); */                             // place each brick
+                       // place each brick
             }
         }
         else if(comm != "wall" || comm != "arrow" || comm != "enemy" || comm != "player" || comm != "chest"){
@@ -266,30 +283,14 @@ void init(int a)
             exit(EXIT_FAILURE);
         }
 
-   } // need to add a | to the end of the text file to act as and end character
+        //cout << "eowHere" << endl;
 
-   //original code
-   /*P->initPlayer(M->getGridSize(),6,"images/p.png");   // initialize player pass grid size,image and number of frames
-    P->loadArrowImage("images/arr.png");                // Load arrow image
-    P->placePlayer(9,9);  */                              // Place player
-    /*for(int i=1; i< M->getGridSize();i++)
-    {
-      W[i].wallInit(M->getGridSize(),"images/wall.png");// Load walls
-      W[i].placeWall(i,5);                              // place each brick
-    }*/
-    /*for(int i=0; i<GENEMYLIMIT;i++)
-
-    {
-        E[i].initEnm(M->getGridSize(),4,"images/e.png"); //Load enemy image
-        E[i].placeEnemy(float(rand()%(M->getGridSize())),float(rand()%(M->getGridSize())));
-        //place enemies random x,y
-    }*/
-    //vecref.init2dvec(M->getGridSize());//AS initializes the 2d vector to blank spaces
-//cout << "you are inside";
+   } // need to add a | to the end of the text file to act as and end character\
     plyActs = {false, false, false, false, false};
     keysPressed = plyActs;
     canTakeAction = false;
     actionInProgress = false;
+
 }
 
 void display(void)
@@ -301,9 +302,9 @@ void display(void)
         glPopMatrix();
 
         if(!menuisopen){
-        for(int i=0; i<wallcount;i++)
+        for(int i=0; i<W->size();i++)
         {
-           W[i].drawWall();
+           W->at(i).drawWall();
         }
 
         glPushMatrix();
@@ -314,9 +315,9 @@ void display(void)
             P->drawplayer();
         glPopMatrix();
 
-        for(int i=0; i<GENEMYLIMIT;i++)
+        for(int i=0; i<E->size();i++)
         {
-        E[i].drawEnemy();
+        E->at(i).drawEnemy();
         }
 
         glPushMatrix();
@@ -440,74 +441,28 @@ int Print(int Array[]){
 {
 
     utilityFunctions utilFunc;
-     //vecref.display2DVec();
 
-     //system("cls");
      morty[0] = vecref.getvecpos(P->getPlayerLoc().x, P->getPlayerLoc().y);
 
 
     if (keysPressed.moveUp)
     {
-        //if(P->playerCollision(3,3))break;
-        /*
-         updatepos(P->getPlayerLoc().x, P->getPlayerLoc().y);
-         //displayloctrack();
 
-         if((loctrackx[0] != loctrackx[1]) || (loctracky[0] != loctracky[1])){//makes it so that the enemy only moves when the player enter a new square
-            vecref.updateVecref(loctrackx[1], loctracky[1], '_');//updates the vecref in real time
-            vecref.updateVecref(loctrackx[0], loctracky[0], 'P');
-        }
-        */
-        //updateenemyvecmain();//there may be a better place to put this
         keysPressed.moveUp = false;
     }
     if (keysPressed.moveDown)
     {
-        //if(P->playerCollision(3,3))break;
-         //checkwallcollision();
-         /*
-         updatepos(P->getPlayerLoc().x, P->getPlayerLoc().y);
-         //displayloctrack();
-
-         if((loctrackx[0] != loctrackx[1]) || (loctracky[0] != loctracky[1])){//makes it so that the enemy only moves when the player enter a new square
-            vecref.updateVecref(loctrackx[1], loctracky[1], '_');
-            vecref.updateVecref(loctrackx[0], loctracky[0], 'P');
-        }
-        */
-        //updateenemyvecmain();//there may be a better place to put this
 
         keysPressed.moveDown = false;
     }
     if (keysPressed.moveLeft)
     {
-        //if(P->playerCollision(3,3))break;
-        //checkwallcollision();
-        /*
-        updatepos(P->getPlayerLoc().x, P->getPlayerLoc().y);
-        //displayloctrack();
 
-        if((loctrackx[0] != loctrackx[1]) || (loctracky[0] != loctracky[1])){//makes it so that the enemy only moves when the player enter a new square
-        vecref.updateVecref(loctrackx[1], loctracky[1], '_');
-        vecref.updateVecref(loctrackx[0], loctracky[0], 'P');
-        }
-        //updateenemyvecmain();//there may be a better place to put this
-        */
         keysPressed.moveLeft = false;
     }
     if (keysPressed.moveRight)
     {
-        //if(P->playerCollision(3,3))break;
-         //checkwallcollision();
-         /*
-         updatepos(P->getPlayerLoc().x, P->getPlayerLoc().y);
-         //displayloctrack();
 
-         if((loctrackx[0] != loctrackx[1]) || (loctracky[0] != loctracky[1])){//makes it so that the enemy only moves when the player enter a new square
-            vecref.updateVecref(loctrackx[1], loctracky[1], '_');
-            vecref.updateVecref(loctrackx[0], loctracky[0], 'P');
-        }
-        //updateenemyvecmain();//there may be a better place to put this
-        */
 
         keysPressed.moveRight = false;
     }
@@ -520,67 +475,62 @@ int Print(int Array[]){
     {
         P->setActionStatus(plyActs, canTakeAction);
 
-		//cout << P->getObjCurrGridLoc().x << " " << P->getObjCurrGridLoc().y << endl;
-		//vecref.display2DVec();
-		/*
-        if((loctrackx[0] != loctrackx[1]) || (loctracky[0] != loctracky[1])){//makes it so that the enemy only moves when the player enter a new square
-            for (int i = 0; i < GENEMYLIMIT; i++)
-            {
-                     E[i].setActionStatus(canTakeAction);
-            }
-        }
-        */
-
     }
     P->objectAction();
 	bool tempBool00 = false;
 
-    for (int i = 0; i < GWALLLIMIT; i++)
+    for (int i = 0; i < W->size(); i++)
     {
-        if (utilFunc.gridCollision(P->getObjCurrGridLoc(), W[i].getObjCurrGridLoc()))
+        if (utilFunc.gridCollision(P->getObjCurrGridLoc(), W->at(i).getObjCurrGridLoc()))
             tempBool00 = true;
     }
 
     P->objectLogicAction(tempBool00);
 
-    //if (canTakeAction)
+    if (!utilFunc.isSameGridLoc(P->getObjCurrGridLoc(), P->getObjOldGridLoc()))
      {
-         //vecref.updateVecref(P->getObjOldGridLoc().x, P->getObjOldGridLoc().y, '_');
-         //vecref.updateVecref(P->getObjCurrGridLoc().x, P->getObjCurrGridLoc().y, 'P');
+         vecref.updateVecref(P->getObjOldGridLoc().x, P->getObjOldGridLoc().y, '_');
+         vecref.updateVecref(P->getObjCurrGridLoc().x, P->getObjCurrGridLoc().y, 'P');
      }
 
-    //P->getObjCurrGridLoc(), P->getObjOldGridLoc()
     if(!utilFunc.isSameGridLoc(P->getObjCurrGridLoc(), P->getObjOldGridLoc())){//makes it so that the enemy only moves when the player enter a new square
-            for (int i = 0; i < GENEMYLIMIT; i++)
+            for (int i = 0; i < E->size(); i++)
             {
-                     E[i].setActionStatus(canTakeAction);
+                     E->at(i).setActionStatus(canTakeAction);
             }
     }
 
-    for (int i = 0; i < enemycount; i++)
+    for (int i = 0; i < E->size(); i++)
     {
-        //cout << "something029" << endl;
-        E[i].objectAction(vecref, vecref.getvecpos(E[i].getEnemyLoc().x, E[i].getEnemyLoc().y), morty);
-        //(E[i].getObjOldGridLoc().x, E[i].getObjOldGridLoc().y, '_');
-         E[i].objectLogicAction(false);
+
+        E->at(i).objectAction(vecref, vecref.getvecpos(E->at(i).getEnemyLoc().x, E->at(i).getEnemyLoc().y), morty);
+
+        bool isBlockedMove;
+        isBlockedMove = !utilFunc.isInGridBounds({M->getGridSize(), M->getGridSize()}, E->at(i).getObjNewGridLoc());
+        //isBlockedMove = utilFunc.isInGridBounds({M->getGridSize(), M->getGridSize()}, E->at(i).getObjNewGridLoc());
+
+         E->at(i).objectLogicAction(isBlockedMove);
 
          if (canTakeAction)
          {
-             cout << E[i].getObjOldGridLoc().x << " " << E[i].getObjOldGridLoc().y << endl;
-             cout << E[i].getObjCurrGridLoc().x << " " << E[i].getObjCurrGridLoc().y << endl;
+             //cout << "here00" << endl;
+             cout << E->at(i).getObjOldGridLoc().x << " " << E->at(i).getObjOldGridLoc().y << endl;
+             cout << E->at(i).getObjCurrGridLoc().x << " " << E->at(i).getObjCurrGridLoc().y << endl;
+             cout << E->at(i).getObjNewGridLoc().x << " " << E->at(i).getObjNewGridLoc().y << endl;
          }
 
-         if (canTakeAction)
+         //if (!utilFunc.isSameGridLoc(E->at(i).getObjOldGridLoc(), E->at(i).getObjCurrGridLoc()))
+         if (!utilFunc.isSameGridLoc(E->at(i).getObjOldGridLoc(), E->at(i).getObjNewGridLoc()))
          {
-             vecref.updateVecref(E[i].getObjOldGridLoc().x, E[i].getObjOldGridLoc().y, '_');
-             vecref.updateVecref(E[i].getObjCurrGridLoc().x, E[i].getObjCurrGridLoc().y, 'E');
+             vecref.updateVecref(E->at(i).getObjOldGridLoc().x, E->at(i).getObjOldGridLoc().y, '_');
+             //vecref.updateVecref(E->at(i).getObjCurrGridLoc().x, E->at(i).getObjCurrGridLoc().y, 'E');
+             vecref.updateVecref(E->at(i).getObjNewGridLoc().x, E->at(i).getObjNewGridLoc().y, 'E');
          }
     }
 
-    //updateenemyvecmain();
-
     if (canTakeAction)
     {
+        //cout << "here01" << endl;
         cout << P->getObjCurrGridLoc().x << " " << P->getObjCurrGridLoc().y << endl;
         vecref.display2DVec();
     }
@@ -640,7 +590,7 @@ void displayloctrack(){ // prints to screen the coordinates of the player and th
 
 void checkwallcollision() {
     for (int i = 0; i < wallcount; i++){
-        if(P->playerCollision(W[wallcount].GetWallLoc.x,W[wallcount].GetWallLoc.y))break;
+        //if(P->playerCollision(W[wallcount].GetWallLoc.x,W[wallcount].GetWallLoc.y))break;
     }
 }
 
@@ -654,21 +604,7 @@ void Specialkeys(int key, int x, int y)
     switch(key)
     {
     case GLUT_KEY_UP:
-        /*
-          if(P->playerCollision(3,3))break;
-         updatepos(P->getPlayerLoc().x, P->getPlayerLoc().y);
-         //displayloctrack();
 
-         if((loctrackx[0] != loctrackx[1]) || (loctracky[0] != loctracky[1])){//makes it so that the enemy only moves when the player enter a new square
-            vecref.updateVecref(loctrackx[1], loctracky[1], '_');//updates the vecref in real time
-            vecref.updateVecref(loctrackx[0], loctracky[0], 'P');
-        }
-        updateenemyvecmain();//there may be a better place to put this
-         //P->movePlayer("up");
-         //E[0].moveEnemy("up");
-         //E[1].moveEnemy("up");
-         //E[2].moveEnemy("up");
-         */
          keysPressed.moveUp = true;
          plyActs.moveUp = true;
         canTakeAction = true;
@@ -676,66 +612,21 @@ void Specialkeys(int key, int x, int y)
     break;
 
     case GLUT_KEY_DOWN:
-        /*
-         if(P->playerCollision(3,3))break;
-         checkwallcollision();
-         updatepos(P->getPlayerLoc().x, P->getPlayerLoc().y);
-         //displayloctrack();
 
-         if((loctrackx[0] != loctrackx[1]) || (loctracky[0] != loctracky[1])){//makes it so that the enemy only moves when the player enter a new square
-            vecref.updateVecref(loctrackx[1], loctracky[1], '_');
-            vecref.updateVecref(loctrackx[0], loctracky[0], 'P');
-        }
-        updateenemyvecmain();//there may be a better place to put this
-        */
-         //P->movePlayer("down");
-         //E[0].moveEnemy("down");
-         //E[1].moveEnemy("down");
-         //E[2].moveEnemy("down");
          keysPressed.moveDown = true;
          plyActs.moveDown = true;
         canTakeAction = true;
     break;
 
     case GLUT_KEY_LEFT:
-        /*
-         if(P->playerCollision(3,3))break;
-         checkwallcollision();
-         updatepos(P->getPlayerLoc().x, P->getPlayerLoc().y);
-         //displayloctrack();
 
-         if((loctrackx[0] != loctrackx[1]) || (loctracky[0] != loctracky[1])){//makes it so that the enemy only moves when the player enter a new square
-            vecref.updateVecref(loctrackx[1], loctracky[1], '_');
-            vecref.updateVecref(loctrackx[0], loctracky[0], 'P');
-        }
-        updateenemyvecmain();//there may be a better place to put this
-         //P->movePlayer("left");
-         //E[0].moveEnemy("left");
-         //E[1].moveEnemy("left");
-         //E[2].moveEnemy("left");
-         */
          keysPressed.moveLeft = true;
          plyActs.moveLeft = true;
         canTakeAction = true;
     break;
 
     case GLUT_KEY_RIGHT:
-        /*
-         if(P->playerCollision(3,3))break;
-         checkwallcollision();
-         updatepos(P->getPlayerLoc().x, P->getPlayerLoc().y);
-         //displayloctrack();
 
-         if((loctrackx[0] != loctrackx[1]) || (loctracky[0] != loctracky[1])){//makes it so that the enemy only moves when the player enter a new square
-            vecref.updateVecref(loctrackx[1], loctracky[1], '_');
-            vecref.updateVecref(loctrackx[0], loctracky[0], 'P');
-        }
-        updateenemyvecmain();//there may be a better place to put this
-        */
-         //P->movePlayer("right");
-         //E[0].moveEnemy("right");
-         //E[1].moveEnemy("right");
-         //E[2].moveEnemy("right");
          keysPressed.moveRight = true;
         plyActs.moveRight = true;
         canTakeAction = true;
@@ -750,6 +641,8 @@ void Specialkeys(int key, int x, int y)
 
 int main(int argc, char *argv[])
 {
+    //cout << "here" << endl;
+
    glutInit(&argc, argv);
 
    glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);

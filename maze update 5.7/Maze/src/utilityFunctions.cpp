@@ -39,3 +39,7 @@ bool utilityFunctions::isSameGridLoc(GridLoc objLoc0, GridLoc objLoc1)
     return (objLoc0.x == objLoc1.x && objLoc0.y == objLoc1.y);
 }
 
+bool utilityFunctions::isInGridBounds(gridSize inpGridSize, GridLoc inpGridLoc)
+{
+    return (inpGridLoc.x < inpGridSize.width && inpGridLoc.x >= 0 && inpGridLoc.y < inpGridSize.height && inpGridLoc.y >= 0);
+}
