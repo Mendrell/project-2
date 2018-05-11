@@ -277,8 +277,10 @@ bool Enemies::getIsObjectActing()
 
 void Enemies::objectAction(vectorstuff bash, units curenemypos, vector<units> playerpos)
 {
-    setObjOldGridLoc(getEnemyLoc()); //store old location
-    setObjOldRealLoc(enmLoc); //in case it needs to be reverted to
+    //setObjOldGridLoc(getEnemyLoc()); //store old location
+    //setObjOldRealLoc(enmLoc); //in case it needs to be reverted to
+    setObjOldGridLoc(getObjNewGridLoc()); //store old location
+    setObjOldRealLoc(getObjNewRealLoc()); //in case it needs to be reverted to
     if (canObjectAct)
     {
         //setObjOldGridLoc(getEnemyLoc()); //store old location
@@ -370,8 +372,10 @@ void Enemies::objectAction(vectorstuff bash, units curenemypos, vector<units> pl
 
 
     }
-    setObjCurrRealLoc(enmLoc);
-    setObjCurrGridLoc(getEnemyLoc());
+    //setObjCurrRealLoc(enmLoc);
+    //setObjCurrGridLoc(getEnemyLoc());
+    setObjCurrRealLoc(getObjNewRealLoc());
+    setObjCurrGridLoc(getObjNewGridLoc());
 }
 
 void Enemies::objectLogicAction(bool isBlockCollision)

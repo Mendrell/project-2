@@ -14,7 +14,7 @@ class templateFunctions
 {
     public:
         templateFunctions();
-        virtual ~templateFunctions();
+        ~templateFunctions();
 
         template <class T, class U>
         bool collisionObjectToObject(T *inpObj1, U *inpObj2);
@@ -44,4 +44,8 @@ class templateFunctions
     private:
 };
 
+//#include <templateFunctions.cpp>
+
 #endif // TEMPLATEFUNCTIONS_H
+
+//#include <templateFunctions.cpp>

@@ -47,6 +47,7 @@ class Player
 
         bool arrowStatus;                  // arrow is active or not
         bool livePlayer;                   // Player live or dead
+
 		GridLoc getObjCurrGridLoc();
         GridLoc getObjNewGridLoc();
         GridLoc getObjOldGridLoc();
@@ -62,6 +63,13 @@ class Player
         void setObjCurrRealLoc(loc inpRealLoc);
         void setObjNewRealLoc(loc inpRealLoc);
         void setObjOldRealLoc(loc inpRealLoc);
+
+        bool getIsObjDead();
+        void setIsObjDead(bool inpBool);
+
+        bool getIsProjDead();
+        void setIsProjDead(bool inpBool);
+
     protected:
 
         float t;                           // Ticker for animation
