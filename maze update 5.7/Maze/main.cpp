@@ -139,7 +139,7 @@ void init(int a)
     exit(EXIT_FAILURE);
     }
 
-    vecref.init2dvec(M->getGridSize());//AS initializes the 2d vector to blank spaces
+
 
     while(bob >> comm >> coor1 >> coor2){
 
@@ -259,6 +259,7 @@ void init(int a)
         E[i].placeEnemy(float(rand()%(M->getGridSize())),float(rand()%(M->getGridSize())));
         //place enemies random x,y
     }*/
+    vecref.init2dvec(M->getGridSize());//AS initializes the 2d vector to blank spaces
 //cout << "you are inside";
     plyActs = {false, false, false, false, false};
     canTakeAction = false;
