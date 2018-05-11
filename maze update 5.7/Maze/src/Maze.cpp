@@ -209,4 +209,23 @@ void Maze::setgrid(int gSize)                                        // Construc
     liveSetOfArrws=true;
 }
 
+void Maze::setFoundChest(bool inpBool)
+{
+    liveChest = inpBool;
+}
+
+bool Maze::getFoundChest()
+{
+    return !liveChest;
+}
+
+void Maze::setFoundAmmo(bool inpBool)
+{
+    liveSetOfArrws = inpBool;
+}
+
+bool Maze::getFoundAmmo()
+{
+    return !liveSetOfArrws;
+}
 
