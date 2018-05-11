@@ -54,3 +54,12 @@ void utilityFunctions::displayGLQueue(queue<GridLoc>inpQueue)
     cout << endl;
 }
 
+void utilityFunctions::displayStrQueue(queue<string>inpQueue)
+{
+    while (!inpQueue.empty())
+    {
+        cout << inpQueue.front() << " ";
+        inpQueue.pop();
+    }
+    cout << endl;
+}

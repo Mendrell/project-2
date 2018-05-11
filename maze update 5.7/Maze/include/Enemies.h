@@ -58,6 +58,12 @@ class Enemies
         void setObjNewRealLoc(loc inpRealLoc);
         void setObjOldRealLoc(loc inpRealLoc);
 
+        void getObjTravelPath(queue < string > &retPath);
+        void setObjTravelPath(queue < string > inpPath);
+
+        bool getIsObjDead();
+        void setIsObjDead(bool inpBool);
+
         int gridSize;                       // Grid size of the maze
         float unitWidth;                    // Unit width of the grid
         int stepsPerMove;                   // Step count for animation
@@ -91,6 +97,8 @@ class Enemies
         loc objCurrRealLoc;
         loc objOldRealLoc;
         loc objNewRealLoc;
+
+        queue < string > objTravelPath;
 };
 
 #endif // ENEMIES_H
