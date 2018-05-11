@@ -26,6 +26,13 @@ class wall
             void wallInit(int, char *);    // initialize the wall
             void placeWall(int, int);      // place the wall
 
+			GridLoc getObjCurrGridLoc();
+            GridLoc getObjNewGridLoc();
+            GridLoc getObjOldGridLoc();
+
+            void setObjCurrGridLoc(GridLoc inpGridLoc);
+            void setObjNewGridLoc(GridLoc inpGridLoc);
+            void setObjOldGridLoc(GridLoc inpGridLoc);							
             float unitWidth;               // unit width of the grid cell
             int gridSize;                  // grid size
 
@@ -37,6 +44,9 @@ class wall
               loc wallBrk;                 // viewport location of the wall
               GLuint wallTex;              // wall texture handler
 
+			GridLoc objCurrGridLoc;
+            GridLoc objNewGridLoc;
+            GridLoc objOldGridLoc;
 };
 
 #endif // WALL_H

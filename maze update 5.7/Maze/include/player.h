@@ -39,6 +39,7 @@ class Player
 
         bool getIsObjectActing();
         void objectAction();
+		void objectLogicAction(bool isBlockCollision);
         void setActionStatus(playerActions inpPlayAct, bool inpCanAct);
 
         int frames;                        // Number of frames for animation
@@ -46,6 +47,21 @@ class Player
 
         bool arrowStatus;                  // arrow is active or not
         bool livePlayer;                   // Player live or dead
+		GridLoc getObjCurrGridLoc();
+        GridLoc getObjNewGridLoc();
+        GridLoc getObjOldGridLoc();
+
+        void setObjCurrGridLoc(GridLoc inpGridLoc);
+        void setObjNewGridLoc(GridLoc inpGridLoc);
+        void setObjOldGridLoc(GridLoc inpGridLoc);
+
+        loc getObjCurrRealLoc();
+        loc getObjNewRealLoc();
+        loc getObjOldRealLoc();
+
+        void setObjCurrRealLoc(loc inpRealLoc);
+        void setObjNewRealLoc(loc inpRealLoc);
+        void setObjOldRealLoc(loc inpRealLoc);							
     protected:
 
         float t;                           // Ticker for animation
@@ -75,6 +91,12 @@ class Player
 
         bool collision;
 
+		GridLoc objCurrGridLoc;
+        GridLoc objNewGridLoc;
+        GridLoc objOldGridLoc;
+
+        loc objOldRealLoc;
+        loc objNewRealLoc;
 };
 
 #endif // PLAYER_H

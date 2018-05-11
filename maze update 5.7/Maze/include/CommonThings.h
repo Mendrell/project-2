@@ -24,6 +24,12 @@ typedef struct
 
 typedef struct
 {
+  float width;
+  float height;
+}cartRealDim2d;
+
+typedef struct
+{
   int x;
   int y;
 }GridLoc;

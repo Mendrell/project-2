@@ -13,7 +13,10 @@ using namespace std;
 class vectorstuff
 {
     public:
-        vectorstuff();
+        vectorstuff()
+        {
+
+        }
 
         vector<vector <units> > mastervec;
         void updateVecref(int x, int y, char c)//sets new values to the vector given coordinates and a character

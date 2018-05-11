@@ -34,6 +34,7 @@
 #include <units.h>
 #include <vectorstuff.h>
 
+#include <utilityFunctions.h>
 /* GLUT callback Handlers */
 
 using namespace std;
@@ -438,7 +439,7 @@ int Print(int Array[]){
  void idle(void)
 {
 
-
+    utilityFunctions utilFunc;
      //vecref.display2DVec();
 
      //system("cls");
@@ -505,6 +506,7 @@ int Print(int Array[]){
     {
         P->setActionStatus(plyActs, canTakeAction);
 
+		cout << P->getObjCurrGridLoc().x << " " << P->getObjCurrGridLoc().y << endl;
         if((loctrackx[0] != loctrackx[1]) || (loctracky[0] != loctracky[1])){//makes it so that the enemy only moves when the player enter a new square
             for (int i = 0; i < GENEMYLIMIT; i++)
             {
@@ -514,6 +516,16 @@ int Print(int Array[]){
 
     }
     P->objectAction();
+	bool tempBool00 = false;
+
+    for (int i = 0; i < GWALLLIMIT; i++)
+    {
+        if (utilFunc.gridCollision(P->getObjCurrGridLoc(), W[i].getObjCurrGridLoc()))
+            tempBool00 = true;
+    }
+
+
+    P->objectLogicAction(tempBool00);
     for (int i = 0; i < enemycount; i++)
     {
         E[i].objectAction(vecref,vecref.getvecpos(E[i].getEnemyLoc().x, E[i].getEnemyLoc().y), morty);

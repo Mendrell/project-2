@@ -11,7 +11,10 @@ class units
     public:
         int x, y;
         char type;
-        units();
+        units()
+        {
+
+        }
         void set_unit (int x1, int y1, char type1) {
         x = x1; y = y1; type = type1;
         }

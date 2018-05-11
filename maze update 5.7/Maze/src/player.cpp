@@ -300,28 +300,52 @@ void Player::objectAction()
 {
     if (canObjectAct)
     {
-        canObjectAct = false;
+        //canObjectAct = false;
         isObjectActing = true;
         if (classPlayerActions.moveUp && !classPlayerActions.moveDown)
         {
+			setObjOldRealLoc(getObjCurrRealLoc());
             movePlayer("up");
         }
         else if (classPlayerActions.moveDown && !classPlayerActions.moveUp)
         {
+            setObjOldRealLoc(getObjCurrRealLoc());
             movePlayer("down");
         }
         else if (classPlayerActions.moveLeft && !classPlayerActions.moveRight)
         {
+			setObjOldRealLoc(getObjCurrRealLoc());
             movePlayer("left");
         }
         else if (classPlayerActions.moveRight && !classPlayerActions.moveLeft)
         {
+            setObjOldRealLoc(getObjCurrRealLoc());
             movePlayer("right");
         }
         else if (classPlayerActions.shoot)
         {
+            setObjOldRealLoc(getObjCurrRealLoc());
             shootArrow();
         }
+        //isObjectActing = false;
+        //classPlayerActions = {false, false, false, false, false};
+    }
+}
+
+void Player::objectLogicAction(bool isBlockCollision)
+{
+    if (canObjectAct)
+    {
+        if (!isBlockCollision)
+        {
+
+        }
+        else
+        {
+            setObjCurrRealLoc(getObjOldRealLoc());
+        }
+
+        canObjectAct = false;
         isObjectActing = false;
         classPlayerActions = {false, false, false, false, false};
     }
@@ -371,5 +395,67 @@ bool Player::playerCollision(int x, int y)
 
  collision = false;
  return false;
+}
 
+
+GridLoc Player::getObjCurrGridLoc()
+{
+    //return objCurrGridLoc;
+    return getPlayerLoc();
+}
+
+GridLoc Player::getObjNewGridLoc()
+{
+    return objNewGridLoc;
+}
+
+void Player::setObjCurrGridLoc(GridLoc inpGridLoc)
+{
+    objCurrGridLoc = inpGridLoc;
+}
+
+void Player::setObjNewGridLoc(GridLoc inpGridLoc)
+{
+    objNewGridLoc = inpGridLoc;
+}
+
+GridLoc Player::getObjOldGridLoc()
+{
+    return objOldGridLoc;
+}
+
+void Player::setObjOldGridLoc(GridLoc inpGridLoc)
+{
+    objOldGridLoc = inpGridLoc;
+}
+
+
+loc Player::getObjCurrRealLoc()
+{
+    return plyLoc;
+}
+
+loc Player::getObjNewRealLoc()
+{
+    return objNewRealLoc;
+}
+
+loc Player::getObjOldRealLoc()
+{
+    return objOldRealLoc;
+}
+
+void Player::setObjCurrRealLoc(loc inpRealLoc)
+{
+    plyLoc = inpRealLoc;
+}
+
+void Player::setObjNewRealLoc(loc inpRealLoc)
+{
+    objNewRealLoc = inpRealLoc;
+}
+
+void Player::setObjOldRealLoc(loc inpRealLoc)
+{
+    objOldRealLoc = inpRealLoc;
 }

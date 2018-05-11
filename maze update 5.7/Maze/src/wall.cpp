@@ -13,6 +13,9 @@ wall::wall()
 {
     //ctor
     liveWall = true;
+    GetWallLoc.x = -1;
+    GetWallLoc.y = -1;
+    objCurrGridLoc = GetWallLoc;
 }
 
 wall::~wall()
@@ -70,7 +73,34 @@ void wall::placeWall(int x, int y)
     wallBrk.y =  (unitWidth)*y-1-unitWidth/2;
 }
 
+GridLoc wall::getObjCurrGridLoc()
+{
+    //return objCurrGridLoc;
+    return GetWallLoc;
+}
 
+GridLoc wall::getObjNewGridLoc()
+{
+    return objNewGridLoc;
+}
 
+GridLoc wall::getObjOldGridLoc()
+{
+    return objOldGridLoc;
+}
 
+void wall::setObjCurrGridLoc(GridLoc inpGridLoc)
+{
+    GetWallLoc = inpGridLoc;
+    objCurrGridLoc = inpGridLoc;
+}
 
+void wall::setObjNewGridLoc(GridLoc inpGridLoc)
+{
+    objCurrGridLoc = inpGridLoc;
+}
+
+void wall::setObjOldGridLoc(GridLoc inpGridLoc)
+{
+    objCurrGridLoc = inpGridLoc;
+}
