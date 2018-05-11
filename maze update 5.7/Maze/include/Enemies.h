@@ -26,17 +26,32 @@ class Enemies
         void animate();                     // Animate sprite
         GridLoc getEnemyLoc();              // Return Enemy current grid location
         bool getIsObjectActing();
+
         void objectAction(vectorstuff, units, vector<units>);
+        void objectLogicAction(bool isBlockCollision); //this is to revert to previous location or do real consequences
+
         void setActionStatus(bool inpCanAct);
         void updateEnemyVecPos();
         int enemyloctrackx[2]{};
         int enemyloctracky[2]{};
         void enemyupdatepos(int, int);
         void updateEnemyVecPos(vectorstuff, int, int);
-		GridLoc getObjGridLoc();
+
+		GridLoc getObjCurrGridLoc();
         GridLoc getObjNewGridLoc();
-        void setObjGridLoc(GridLoc inpGridLoc);
-        void setObjNewGridLoc(GridLoc inpGridLoc);						   
+        GridLoc getObjOldGridLoc();
+
+        void setObjCurrGridLoc(GridLoc inpGridLoc);
+        void setObjNewGridLoc(GridLoc inpGridLoc);
+        void setObjOldGridLoc(GridLoc inpGridLoc);
+
+        loc getObjCurrRealLoc();
+        loc getObjNewRealLoc();
+        loc getObjOldRealLoc();
+
+        void setObjCurrRealLoc(loc inpRealLoc);
+        void setObjNewRealLoc(loc inpRealLoc);
+        void setObjOldRealLoc(loc inpRealLoc);
 
         int gridSize;                       // Grid size of the maze
         float unitWidth;                    // Unit width of the grid
@@ -62,8 +77,14 @@ class Enemies
         bool canObjectAct;
         bool needDirectionChange;
         int objectGenericCounter;
-		GridLoc objectCurrentGridLoc;
-        GridLoc objectNewGridLoc;			 
+
+		GridLoc objCurrGridLoc;
+        GridLoc objNewGridLoc;
+        GridLoc objOldGridLoc;
+
+        loc objCurrRealLoc;
+        loc objOldRealLoc;
+        loc objNewRealLoc;
 };
 
 #endif // ENEMIES_H

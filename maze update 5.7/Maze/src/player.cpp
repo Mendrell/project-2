@@ -447,6 +447,7 @@ loc Player::getObjOldRealLoc()
 
 void Player::setObjCurrRealLoc(loc inpRealLoc)
 {
+    objCurrRealLoc = inpRealLoc;
     plyLoc = inpRealLoc;
 }
 

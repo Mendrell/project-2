@@ -94,6 +94,9 @@ void Enemies::placeEnemy(int x, int y)
     y+=1;
     enmLoc.x =  -1-unitWidth/2+(unitWidth)*x;
     enmLoc.y =  -1-unitWidth/2+(unitWidth)*y;
+
+    setObjCurrGridLoc({x, y});
+    setObjCurrRealLoc(enmLoc);
 }
 
 void Enemies::moveEnemy(string dir)
@@ -236,7 +239,10 @@ void Enemies::objectAction(vectorstuff bash, units curenemypos, vector<units> pl
 {
     if (canObjectAct)
     {
-        canObjectAct = false;
+        setObjOldGridLoc(getEnemyLoc()); //store old location
+        setObjOldRealLoc(enmLoc); //in case it needs to be reverted to
+
+        //canObjectAct = false;
         enemyai moveai;
         /*
         units themove = moveai.returnSolution(bash.mastervec, curenemypos, playerpos);
@@ -298,10 +304,34 @@ void Enemies::objectAction(vectorstuff bash, units curenemypos, vector<units> pl
                 break;
         }
         //objectGenericCounter++;
+
+        //store the current locations
+        setObjCurrRealLoc(enmLoc);
+        setObjCurrGridLoc(getEnemyLoc());
     }
 
 
 }
+
+void Enemies::objectLogicAction(bool isBlockCollision)
+{
+    if (canObjectAct)
+    {
+        if (!isBlockCollision)
+        {
+
+        }
+        else
+        {
+            setObjCurrRealLoc(getObjOldRealLoc());
+        }
+
+        canObjectAct = false;
+        isObjectActing = false;
+        //classPlayerActions = {false, false, false, false, false};
+    }
+}
+
 
 void Enemies::setActionStatus(bool inpCanAct)
 {
@@ -311,4 +341,66 @@ void Enemies::setActionStatus(bool inpCanAct)
 void Enemies::changeDirection()
 {
 
+}
+
+GridLoc Enemies::getObjCurrGridLoc()
+{
+    //return objCurrGridLoc;
+    return getEnemyLoc();
+}
+
+GridLoc Enemies::getObjNewGridLoc()
+{
+    return objOldGridLoc;
+}
+
+GridLoc Enemies::getObjOldGridLoc()
+{
+    return objNewGridLoc;
+}
+
+void Enemies::setObjCurrGridLoc(GridLoc inpGridLoc)
+{
+    objCurrGridLoc = inpGridLoc;
+}
+
+void Enemies::setObjNewGridLoc(GridLoc inpGridLoc)
+{
+    objNewGridLoc = inpGridLoc;
+}
+
+void Enemies::setObjOldGridLoc(GridLoc inpGridLoc)
+{
+    objOldGridLoc = inpGridLoc;
+}
+
+loc Enemies::getObjCurrRealLoc()
+{
+    return objCurrRealLoc;
+}
+
+loc Enemies::getObjNewRealLoc()
+{
+    return objNewRealLoc;
+}
+
+loc Enemies::getObjOldRealLoc()
+{
+    return objOldRealLoc;
+}
+
+void Enemies::setObjCurrRealLoc(loc inpRealLoc)
+{
+    objCurrRealLoc = inpRealLoc;
+    enmLoc = inpRealLoc;
+}
+
+void Enemies::setObjNewRealLoc(loc inpRealLoc)
+{
+    objNewRealLoc = inpRealLoc;
+}
+
+void Enemies::setObjOldRealLoc(loc inpRealLoc)
+{
+    objOldRealLoc = inpRealLoc;
 }

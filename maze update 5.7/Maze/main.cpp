@@ -284,7 +284,7 @@ void init(int a)
         E[i].placeEnemy(float(rand()%(M->getGridSize())),float(rand()%(M->getGridSize())));
         //place enemies random x,y
     }*/
-    vecref.init2dvec(M->getGridSize());//AS initializes the 2d vector to blank spaces
+    //vecref.init2dvec(M->getGridSize());//AS initializes the 2d vector to blank spaces
 //cout << "you are inside";
     plyActs = {false, false, false, false, false};
     keysPressed = plyActs;
@@ -538,8 +538,15 @@ int Print(int Array[]){
     {
         //cout << "something029" << endl;
         E[i].objectAction(vecref, vecref.getvecpos(E[i].getEnemyLoc().x, E[i].getEnemyLoc().y), morty);
+        //(E[i].getObjOldGridLoc().x, E[i].getObjOldGridLoc().y, '_');
+         vecref.updateVecref(E[i].getObjOldGridLoc().x, E[i].getObjOldGridLoc().y, '_');
+         vecref.updateVecref(E[i].getEnemyLoc().x, E[i].getEnemyLoc().y, 'E');
+         E[i].objectLogicAction(false);
 
     }
+
+    updateenemyvecmain();
+
     if (canTakeAction)
     {
         cout << P->getObjCurrGridLoc().x << " " << P->getObjCurrGridLoc().y << endl;

@@ -61,7 +61,7 @@ class Player
 
         void setObjCurrRealLoc(loc inpRealLoc);
         void setObjNewRealLoc(loc inpRealLoc);
-        void setObjOldRealLoc(loc inpRealLoc);							
+        void setObjOldRealLoc(loc inpRealLoc);
     protected:
 
         float t;                           // Ticker for animation
@@ -95,6 +95,7 @@ class Player
         GridLoc objNewGridLoc;
         GridLoc objOldGridLoc;
 
+        loc objCurrRealLoc;
         loc objOldRealLoc;
         loc objNewRealLoc;
 };
