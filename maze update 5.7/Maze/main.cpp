@@ -445,7 +445,7 @@ int Print(int Array[]){
      //system("cls");
      morty[0] = vecref.getvecpos(P->getPlayerLoc().x, P->getPlayerLoc().y);
 
-     /*
+
     if (keysPressed.moveUp)
     {
         //if(P->playerCollision(3,3))break;
@@ -457,6 +457,7 @@ int Print(int Array[]){
             vecref.updateVecref(loctrackx[0], loctracky[0], 'P');
         }
         updateenemyvecmain();//there may be a better place to put this
+        keysPressed.moveUp = false;
     }
     if (keysPressed.moveDown)
     {
@@ -470,6 +471,8 @@ int Print(int Array[]){
             vecref.updateVecref(loctrackx[0], loctracky[0], 'P');
         }
         updateenemyvecmain();//there may be a better place to put this
+
+        keysPressed.moveDown = false;
     }
     if (keysPressed.moveLeft)
     {
@@ -483,6 +486,8 @@ int Print(int Array[]){
         vecref.updateVecref(loctrackx[0], loctracky[0], 'P');
         }
         updateenemyvecmain();//there may be a better place to put this
+
+        keysPressed.moveLeft = false;
     }
     if (keysPressed.moveRight)
     {
@@ -496,17 +501,20 @@ int Print(int Array[]){
             vecref.updateVecref(loctrackx[0], loctracky[0], 'P');
         }
         updateenemyvecmain();//there may be a better place to put this
+
+        keysPressed.moveRight = false;
     }
     if (keysPressed.shoot)
     {
     }
-    */
+
 
     if (canTakeAction)
     {
         P->setActionStatus(plyActs, canTakeAction);
 
-		cout << P->getObjCurrGridLoc().x << " " << P->getObjCurrGridLoc().y << endl;
+		//cout << P->getObjCurrGridLoc().x << " " << P->getObjCurrGridLoc().y << endl;
+		//vecref.display2DVec();
         if((loctrackx[0] != loctrackx[1]) || (loctracky[0] != loctracky[1])){//makes it so that the enemy only moves when the player enter a new square
             for (int i = 0; i < GENEMYLIMIT; i++)
             {
@@ -524,12 +532,18 @@ int Print(int Array[]){
             tempBool00 = true;
     }
 
-
     P->objectLogicAction(tempBool00);
+
     for (int i = 0; i < enemycount; i++)
     {
-        E[i].objectAction(vecref,vecref.getvecpos(E[i].getEnemyLoc().x, E[i].getEnemyLoc().y), morty);
+        //cout << "something029" << endl;
+        E[i].objectAction(vecref, vecref.getvecpos(E[i].getEnemyLoc().x, E[i].getEnemyLoc().y), morty);
 
+    }
+    if (canTakeAction)
+    {
+        cout << P->getObjCurrGridLoc().x << " " << P->getObjCurrGridLoc().y << endl;
+        vecref.display2DVec();
     }
 
     plyActs = {false, false, false, false, false};

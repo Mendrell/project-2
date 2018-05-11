@@ -90,3 +90,4 @@ wall 6 6
 wall 7 6
 wall 6 2
 wall 7 2
+enemy 10 10

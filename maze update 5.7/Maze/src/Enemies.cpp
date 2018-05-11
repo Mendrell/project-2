@@ -238,13 +238,20 @@ void Enemies::objectAction(vectorstuff bash, units curenemypos, vector<units> pl
     {
         canObjectAct = false;
         enemyai moveai;
+        /*
         units themove = moveai.returnSolution(bash.mastervec, curenemypos, playerpos);
         cout << "Enemy current location: x."<< getEnemyLoc().x << "   y." <<getEnemyLoc().y << endl;
         cout << "The AI move: x."<< themove.x << "   y." << themove.y << endl << endl;
         cout << "front of solution que: "<< moveai.solutionQueue.front().x << "   " << moveai.solutionQueue.front().y;
+        */
 
+        units themove;
+        //themove.set_unit(0, 0 '0');
+        themove.set_unit(0, 0, '0');
 
         if(getEnemyLoc().x == themove.x){
+            objectGenericCounter = 2;
+            /*
             if(getEnemyLoc().y == themove.y + 1){
                 cout << "Enemy moved up." << endl;
                 objectGenericCounter = 1;
@@ -264,6 +271,7 @@ void Enemies::objectAction(vectorstuff bash, units curenemypos, vector<units> pl
                 cout << "Enemy moved left." << endl;
                 objectGenericCounter = 2;
             }
+            */
         }
         else
             //cout << "something is not working right";
