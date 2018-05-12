@@ -1,3 +1,9 @@
+/*
+
+A class that keeps track of the details of the graph elements
+
+*/
+
 #ifndef UNITS_H
 #define UNITS_H
 #include <string>

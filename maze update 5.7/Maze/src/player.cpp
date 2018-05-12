@@ -1,6 +1,13 @@
 /*
  * MAZE Game Framework
  * Written by Dr. Dhanyu Amarasinghe Spring 2018
+
+ this is the player class
+ This is what the player controls
+ Movement is turn based
+ Player can fire a projectile
+ This class also handles the projectile
+
  */
 
 #include <Player.h>

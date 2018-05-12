@@ -1,6 +1,12 @@
 /*
  * MAZE Game Framework
  * Written by Dr. Dhanyu Amarasinghe Spring 2018
+
+ This is the Maze object
+ it is used for drawing the background
+ it is also used to keep track of the win state
+ and pickups
+
  */
 #ifndef MAZE_H
 #define MAZE_H
