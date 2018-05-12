@@ -387,7 +387,14 @@ void display(void)
            M->drawArrows();
         glPopMatrix();
     }
-        }
+
+    }
+    if(gamewin && !menuisopen){
+        M->loadBackgroundImage("images/YouWin.png");
+            //glPushMatrix();
+            M->drawBackground();
+    }
+
     glutSwapBuffers();
 }
 
@@ -605,7 +612,7 @@ int Print(int Array[]){
     }
 
     if ((P->getPlayerLoc().x == M->GetChestLoc().x) && (P->getPlayerLoc().y == M->GetChestLoc().y)){
-        //gamewin = true;
+        gamewin = true;
     }
 
     P->objectLogicAction(isPlayerBlocked);
