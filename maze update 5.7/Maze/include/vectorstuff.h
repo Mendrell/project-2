@@ -1,3 +1,12 @@
+/*
+
+This is the data structure for the graph
+vector < vector < struct > > is the data structure is used
+It is used for graph collisions
+and calculating the shortest path
+
+*/
+
 #ifndef VECTORSTUFF_H
 #define VECTORSTUFF_H
 #include <units.h>
@@ -6,7 +15,6 @@
 #include <iostream>
 #include <Maze.h>
 #include <queue>
-
 
 using namespace std;
 

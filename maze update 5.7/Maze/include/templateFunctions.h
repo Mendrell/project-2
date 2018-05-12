@@ -1,3 +1,11 @@
+/*
+
+A utility class where the objects may vary
+to reduce redundant code
+
+*/
+
+
 #ifndef TEMPLATEFUNCTIONS_H
 #define TEMPLATEFUNCTIONS_H
 

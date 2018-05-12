@@ -1,3 +1,10 @@
+/*
+
+These are just functions that are useful
+but don't really in a specific class
+
+*/
+
 #include "utilityFunctions.h"
 #include <math.h>       /* ceil */
 

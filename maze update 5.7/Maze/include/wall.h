@@ -1,6 +1,10 @@
 /*
  * MAZE Game Framework
  * Written by Dr. Dhanyu Amarasinghe Spring 2018
+
+ This is the wall object in game
+ It is used to block movement and projectiles
+
  */
 #ifndef WALL_H
 #define WALL_H

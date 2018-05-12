@@ -2,6 +2,14 @@
  * MAZE Game Framework
  * Written by Dr. Dhanyu Amarasinghe Spring 2018
 
+ Description:
+ First level is automatically called
+ Menu is accessed with 'm'
+    from There levels can be selected
+ Esc quits the game
+ Arrow keys to move
+ Space to shoot when pick up acquired
+
  NM: 051018: changed it so that keys do not directly call any function
     strong advice, have the keys only set flags
     have the flags determine where a function should be called in idle()
@@ -904,6 +912,8 @@ void cleanEnemyList()
             vecref.updateVecref(E->at(i).getObjNewGridLoc().x, E->at(i).getObjNewGridLoc().y, '_');
             tFunc.removeVectorPointerElement(E, i);
             cout << E->size() << endl;
+            if(E->size() < 1)
+                gamewin = true;
         }
     }
 }

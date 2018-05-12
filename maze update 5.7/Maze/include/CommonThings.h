@@ -1,6 +1,9 @@
 /*
  * MAZE Game Framework
  * Written by Dr. Dhanyu Amarasinghe Spring 2018
+
+ data structures that are shared between classes
+
  */
 
 #ifndef COMMONTHINGS_H
