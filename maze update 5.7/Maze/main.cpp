@@ -693,16 +693,12 @@ int Print(int Array[]){
             {
                 E->at(i).setIsObjDead(true);
                 P->setIsProjDead(true);
-
-                //vecref.updateVecref(P->getObjOldGridLoc().x, P->getObjOldGridLoc().y, '_');
-                //vecref.updateVecref(E->at(i).getObjOldGridLoc().x, E->at(i).getObjOldGridLoc().y, '_');
             }
         }
     }
 
     if (canTakeAction)
     {
-        //cout << "here01" << endl;
         cout << P->getObjCurrGridLoc().x << " " << P->getObjCurrGridLoc().y << endl;
         vecref.display2DVec();
 

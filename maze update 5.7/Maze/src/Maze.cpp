@@ -31,6 +31,20 @@ Maze::~Maze()
 {
     //dtor
 }
+
+void Maze::resetObj(int inpSize)
+{
+    gridSize = inpSize;
+
+    unitWidth = (float)2/gridSize;
+    liveChest = true;
+    liveSetOfArrws=true;
+
+    foundAmmo = false;
+    foundChest = false;
+}
+
+
 void Maze::loadChestImage(char* FileName)
 {
     chestTex = TextureLoader(FileName);
