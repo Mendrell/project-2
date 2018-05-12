@@ -9,22 +9,14 @@
 Maze::Maze()
 {
 
-    foundAmmo = false;
-    foundChest = false;
+    initObj(0);
 
 }
 
 Maze::Maze(int gSize)                                        // Constructor
 {
     //ctor
-    gridSize =gSize;
-
-    unitWidth = (float)2/gridSize;
-    liveChest = true;
-    liveSetOfArrws=true;
-
-    foundAmmo = false;
-    foundChest = false;
+    initObj(gSize);
 }
 
 Maze::~Maze()
@@ -32,7 +24,7 @@ Maze::~Maze()
     //dtor
 }
 
-void Maze::resetObj(int inpSize)
+void Maze::initObj(int inpSize)
 {
     gridSize = inpSize;
 
@@ -225,7 +217,7 @@ void Maze::setgrid(int gSize)                                        // Construc
 
 void Maze::setFoundChest(bool inpBool)
 {
-    liveChest = inpBool;
+    liveChest = !inpBool;
 }
 
 bool Maze::getFoundChest()
@@ -235,7 +227,7 @@ bool Maze::getFoundChest()
 
 void Maze::setFoundAmmo(bool inpBool)
 {
-    liveSetOfArrws = inpBool;
+    liveSetOfArrws = !inpBool;
 }
 
 bool Maze::getFoundAmmo()
