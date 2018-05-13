@@ -27,7 +27,7 @@ Player::Player()
     livePlayer = true;
 
     //objectTimer = new Timer();
-    objectTimer = NULL;
+    objectTimer = nullptr;
     objectDirectionFaced = 6;
     canObjectAct = false;
     isObjectActing = false;
@@ -38,17 +38,21 @@ Player::Player()
 Player::~Player()
 {
     //dtor
-    if (objectTimer != NULL)
+    if (objectTimer != nullptr)
+    {
         delete objectTimer;
+        objectTimer = nullptr;
+    }
 }
 
 void Player::drawArrow()
 {
 
-if(arrowStatus){//this is where i need to update the location of the arrow in the vector
-   glColor3f(1.0,1.0,1.0);
+    if(arrowStatus){//this is where i need to update the location of the arrow in the vector
+        glColor3f(1.0,1.0,1.0);
+        glBindTexture(GL_TEXTURE_2D,arrowTex);
 
-     if(objectTimer->GetTicks()>10)
+        if(objectTimer->GetTicks()>10)
         {
             if(arrowLoc.x>=-1 && arrowLoc.x<=1)
                 arrowLoc.x += t*arrXdir;
@@ -56,14 +60,16 @@ if(arrowStatus){//this is where i need to update the location of the arrow in th
             if(arrowLoc.y>=-1 && arrowLoc.y<=1)
                 arrowLoc.y += t*arrYdir;
             else arrowStatus = false;
-           objectTimer->Reset();
+                objectTimer->Reset();
         }
-    glTranslatef(arrowLoc.x ,arrowLoc.y,0.0);
-    glRotated(arrAngle,0,0,1);
-    glBindTexture(GL_TEXTURE_2D,arrowTex);
-    glScaled(1.0/(float)gridSize,1.0/(float)gridSize,1);
 
-    glBegin(GL_QUADS);
+        glPushMatrix();
+        glTranslatef(arrowLoc.x ,arrowLoc.y,0.0);
+        glRotated(arrAngle,0,0,1);
+        //glBindTexture(GL_TEXTURE_2D,arrowTex);
+        glScaled(1.0/(float)gridSize,1.0/(float)gridSize,1);
+
+        glBegin(GL_QUADS);
         glTexCoord2f(0,0);
         glVertex3f(1,1,0.0f);
 
@@ -75,8 +81,9 @@ if(arrowStatus){//this is where i need to update the location of the arrow in th
 
         glTexCoord2f(0,1);
         glVertex3f(1,-1,0.0f);
-     glEnd();
-  }
+        glEnd();
+        glPopMatrix();
+    }
 }
 
 void Player::shootArrow()//this is where i need to intitiate the arrow in the vector
@@ -145,11 +152,13 @@ void Player::drawplayer()
     if(livePlayer)
     {
 
-   glColor3f(1.0,1.0,1.0);
+    glColor3f(1.0,1.0,1.0);
+    glBindTexture(GL_TEXTURE_2D,plyTex);
 
+   glPushMatrix();
    glTranslatef(plyLoc.x ,plyLoc.y,0.0);
 
-    glBindTexture(GL_TEXTURE_2D,plyTex);
+    //glBindTexture(GL_TEXTURE_2D,plyTex);
     glScaled(1.0/(float)gridSize,1.0/(float)gridSize,1);
 
 
@@ -166,6 +175,7 @@ void Player::drawplayer()
         glTexCoord2f(xmin,ymax);
         glVertex3f(1,-1,0.0f);
      glEnd();
+     glPopMatrix();
     }
 }
 

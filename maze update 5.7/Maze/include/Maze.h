@@ -31,6 +31,8 @@ class Maze
         Maze(int);                        // Overload Constructor
         virtual ~Maze();                  // Deconstructor
 
+        void initObj(int inpSize);
+
       void loadBackgroundImage(char *);   // set an image for the background
       void loadSetOfArrowsImage(char *);  // set an image for the Arrow Bundle
       void loadChestImage(char *);        // set an image for the Arrow

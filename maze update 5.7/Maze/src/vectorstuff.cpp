@@ -151,22 +151,22 @@ int vectorstuff::characterParser(char inpChar)
 	retInt = 0;
 	switch(inpChar)
 	{
-		case ' ':
+		case EMPTYSYMBOL:
 			retInt = GSPACE;
 			break;
-		case '#':
+		case WALLSYMBOL:
 			retInt = GWALL;
 			break;
-		case 'P':
+		case PLAYERSYMBOL:
 			retInt = GPLAYER;
 			break;
-		case 'E':
+		case ENEMYSYMBOL:
 			retInt = GENEMY;
 			break;
-		case 'C':
+		case CHESTSYMBOL:
 			retInt = GCHEST;
 			break;
-		case 'A':
+		case AMMOSYMBOL:
 			retInt = GAMMO;
 			break;
 		default:
@@ -184,22 +184,22 @@ char vectorstuff::intParser(int inpInt)
 	switch(inpInt)
 	{
 		case GSPACE:
-			retChar = '_';
+			retChar = EMPTYSYMBOL;
 			break;
 		case GWALL:
-			retChar = '#';
+			retChar = WALLSYMBOL;
 			break;
 		case GPLAYER:
-			retChar = 'P';
+			retChar = PLAYERSYMBOL;
 			break;
 		case GENEMY:
-			retChar = 'E';
+			retChar = ENEMYSYMBOL;
 			break;
 		case GCHEST:
-			retChar = 'C';
+			retChar = CHESTSYMBOL;
 			break;
 		case GAMMO:
-			retChar = 'A';
+			retChar = AMMOSYMBOL;
 			break;
 		default:
 			//cout << "error parsing" << endl;

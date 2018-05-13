@@ -19,6 +19,13 @@ using namespace std;
 
 class Timer;
 
+const char EMPTYSYMBOL = '_';
+const char WALLSYMBOL = '#';
+const char ENEMYSYMBOL = 'E';
+const char PLAYERSYMBOL = 'P';
+const char CHESTSYMBOL = 'C';
+const char AMMOSYMBOL = 'A';
+
 typedef struct
 {
   float x;
@@ -85,7 +92,7 @@ static GLuint TextureLoader(char* FileName)
 }
 
 template <class T>
-void enemyclear(T* a, int n){
+void enemyclear(T* a){
     /*
     for(int i=0;i<n;i++){
         a[i].live=0;
@@ -94,7 +101,7 @@ void enemyclear(T* a, int n){
     a->clear();
 }
 template <class T>
-void wallclear(T* a, int n){
+void wallclear(T* a){
     /*
     for(int i=0;i<n;i++){
         a[i].liveWall=0;
