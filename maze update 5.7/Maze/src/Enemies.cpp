@@ -25,8 +25,8 @@ Enemies::Enemies()
     up= down = left=right=false;
     live = true;
 
-    //objectTimer = new Timer();
-    objectTimer = NULL;
+    objectTimer = new Timer();
+    //objectTimer = nullptr;
 
     objectDirectionFaced = 6;
     canObjectAct = false;
@@ -40,13 +40,17 @@ Enemies::Enemies()
 Enemies::~Enemies()
 {
     //dtor
-    if (objectTimer != NULL)
+    if (objectTimer != nullptr)
+    {
         delete objectTimer;
+        objectTimer = nullptr;
+    }
+        //delete objectTimer;
 }
 
 void Enemies::initEnm(int grid,int numFrames, char * FileName)
 {
-    objectTimer = new Timer();
+    //objectTimer = new Timer();
     gridSize = grid;
     frames = numFrames;
     xmax =1/(float)frames;

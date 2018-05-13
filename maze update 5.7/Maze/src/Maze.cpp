@@ -100,6 +100,8 @@ void Maze::drawBackground()
     glColor3f(1.0,1.0,1.0);
     glBindTexture(GL_TEXTURE_2D,bakTex);
 
+    glPushMatrix();
+
     glBegin(GL_QUADS);
         glTexCoord2f(0,1);
         glVertex3f(1,-1,0.0f);
@@ -113,6 +115,7 @@ void Maze::drawBackground()
         glTexCoord2f(1,1);
         glVertex3f(-1,-1,0.0f);
      glEnd();
+     glPopMatrix();
 }
 
 
@@ -121,6 +124,9 @@ void Maze::drawGrid()
    float a;
    glColor4f(1.0,1.0,1.0,0.2);
    glDisable(GL_TEXTURE_2D);
+
+   glPushMatrix();
+
    glPointSize(1);
    glBegin(GL_LINES);
 
@@ -133,6 +139,9 @@ void Maze::drawGrid()
          glVertex3f(1,a,0.4);
     }
     glEnd();
+
+    glPopMatrix();
+
     glEnable(GL_TEXTURE_2D);
 }
 
@@ -141,27 +150,32 @@ void Maze::drawArrows()
     if(liveSetOfArrws)
     {
 
-    glColor3f(1.0,1.0,1.0);
+        glColor3f(1.0,1.0,1.0);
+        glBindTexture(GL_TEXTURE_2D,ArrBnchTex);
 
-    glTranslatef(setOfArrsLoc.x,setOfArrsLoc.y,1.0);
-    glRotated(-spin,0,0,1);
+        glPushMatrix();
 
-    glBindTexture(GL_TEXTURE_2D,ArrBnchTex);
-    glScaled(1.0/(float)(gridSize),1.0/(float)(gridSize),1.0);
+        glTranslatef(setOfArrsLoc.x,setOfArrsLoc.y,1.0);
+        glRotated(-spin,0,0,1);
 
-    glBegin(GL_QUADS);
-        glTexCoord2f(0,1);
-        glVertex3f(1,-1,0.0f);
+        //glBindTexture(GL_TEXTURE_2D,ArrBnchTex);
+        glScaled(1.0/(float)(gridSize),1.0/(float)(gridSize),1.0);
 
-       glTexCoord2f(0,0);
-        glVertex3f(1,1,0.0f);
+        glBegin(GL_QUADS);
+            glTexCoord2f(0,1);
+            glVertex3f(1,-1,0.0f);
 
-        glTexCoord2f(1,0);
-        glVertex3f(-1,1,0.0f);
+           glTexCoord2f(0,0);
+            glVertex3f(1,1,0.0f);
 
-        glTexCoord2f(1,1);
-        glVertex3f(-1,-1,0.0f);
-     glEnd();
+            glTexCoord2f(1,0);
+            glVertex3f(-1,1,0.0f);
+
+            glTexCoord2f(1,1);
+            glVertex3f(-1,-1,0.0f);
+         glEnd();
+
+         glPopMatrix();
     }
 }
 
@@ -169,10 +183,13 @@ void Maze::drawChest()
 {
     if(liveChest){
     glColor3f(1.0,1.0,1.0);
+    glBindTexture(GL_TEXTURE_2D,chestTex);
+
+    glPushMatrix();
 
     glTranslatef(chestLoc.x,chestLoc.y,1.0);
 
-    glBindTexture(GL_TEXTURE_2D,chestTex);
+    //glBindTexture(GL_TEXTURE_2D,chestTex);
     glScaled(1.0/(float)(gridSize+5),1.0/(float)(gridSize+5),1.0);
     glRotated(spin,0,0,1);
 
@@ -189,6 +206,8 @@ void Maze::drawChest()
         glTexCoord2f(1,1);
         glVertex3f(-1,-1,0.0f);
      glEnd();
+
+     glPopMatrix();
 
      spin +=0.5;
     }

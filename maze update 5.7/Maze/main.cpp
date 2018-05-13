@@ -58,7 +58,7 @@
 using namespace std;
 
 const int GENEMYLIMIT = 10;
-const int GWALLLIMIT = 100;
+//const int GWALLLIMIT = 100;
 
 const int NUMERICSYMBOLS = 10;
 const int ALPHABETSYMBOLS = 26;
@@ -93,16 +93,21 @@ void managePlayerLogic();
 void manageEnemyLogic();
 void manageProjectileLogic();
 
+void manageMenu();
+
 void display(void);                             // Main Display : this runs in a loop
 
-Maze *M = NULL;                         // Set Maze grid size
+void releaseKey(unsigned char key, int x, int y);
+void releaseSpecialKeys(int key, int x, int y);
+
+Maze *M = nullptr;                         // Set Maze grid size
 //Maze *M = new Maze(15);                         // Set Maze grid size
-Player *P = NULL;                       // create player
+Player *P = nullptr;                       // create player
 
 //wall W[GWALLLIMIT];                                    // wall with number of bricks
 //Enemies E[GENEMYLIMIT];                                  // create number of enemies
-vector < wall > *W = NULL;
-vector < Enemies > *E = NULL;
+vector < wall > *W = nullptr;
+vector < Enemies* > *E = nullptr;
 Timer *T0 = new Timer();                        // animation timer
 
 float wWidth, wHeight;                          // display window width and Height
@@ -148,11 +153,11 @@ vectorstuff vecref;//AS declares the vector we keep track of everything in
 
 void updateenemyvecmain(){//AS i dont know why but this function has to be passed in main or it wont work
     for(int i = 0; i < E->size(); i++){
-            int curx = E->at(i).getEnemyLoc().x;
-            int cury = E->at(i).getEnemyLoc().y;
-            E->at(i).updateEnemyVecPos(vecref, curx, cury);
-            vecref.updateVecref(E->at(i).enemyloctrackx[1], E->at(i).enemyloctracky[1], EMPTYSYMBOL);
-            vecref.updateVecref(E->at(i).enemyloctrackx[0], E->at(i).enemyloctracky[0], ENEMYSYMBOL);
+            int curx = E->at(i)->getEnemyLoc().x;
+            int cury = E->at(i)->getEnemyLoc().y;
+            E->at(i)->updateEnemyVecPos(vecref, curx, cury);
+            vecref.updateVecref(E->at(i)->enemyloctrackx[1], E->at(i)->enemyloctracky[1], EMPTYSYMBOL);
+            vecref.updateVecref(E->at(i)->enemyloctrackx[0], E->at(i)->enemyloctracky[0], ENEMYSYMBOL);
 
         }
 
@@ -171,31 +176,30 @@ void init(int a)
     resetPtrObjects();
 
     if(!gamestart){
-    gamestart=1;
+        gamestart=1;
+        glEnable(GL_COLOR_MATERIAL);
+        glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+        glShadeModel(GL_SMOOTH);
+        glEnable(GL_LINE_SMOOTH);
+        glEnable(GL_POLYGON_SMOOTH);
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
 
-    //resetPtrObjects();
+        glClearColor(0.0,0.0,0.0,0.0);
+        gluOrtho2D(0, wWidth, 0, wHeight);
 
-    glEnable(GL_COLOR_MATERIAL);
-    glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-    glShadeModel(GL_SMOOTH);
-    glEnable(GL_LINE_SMOOTH);
-    glEnable(GL_POLYGON_SMOOTH);
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
+        T0->Start();                                        // set timer to 0
 
-    glClearColor(0.0,0.0,0.0,0.0);
-    gluOrtho2D(0, wWidth, 0, wHeight);
-
-    T0->Start();                                        // set timer to 0
-
-    glEnable(GL_BLEND);                                 //display images with transparent
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glEnable(GL_BLEND);                                 //display images with transparent
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
+
     string level[4] = {"mapgen.txt","mapgen2.txt","mapgen3.txt","mapgen4.txt"};
 
     M->loadBackgroundImage("images/bak.jpg");           // Load maze background image
     ifstream bob;//AS initializes a file called bob
-    bob.open("mapgen.txt");
+    //bob.open("mapgen.txt");
+    bob.open(level[a-1].c_str());
     if(!bob.is_open()){//AS exits the program if the file does not exist
     cout << "file not found!\n";
     exit(EXIT_FAILURE);
@@ -205,7 +209,7 @@ void init(int a)
 
     //enemycount = 0;
     int tempCount00 = 0;
-    Enemies tempEnemy00;
+    //Enemies tempEnemy00;
     int playercount = 0;
     string comm;
     int coor1;
@@ -265,21 +269,23 @@ void init(int a)
             checkBounds(coor1,coor2);
             if(E->size() < GENEMYLIMIT){
 
-                E->push_back(tempEnemy00);
-                E->back().initEnm(M->getGridSize(),4,"images/e.png"); //Load enemy image
-                E->back().placeEnemy(coor1,coor2);
-                int curx = E->back().getEnemyLoc().x;
-                int cury = E->back().getEnemyLoc().y;
+                //Enemies tempEnemy00;
+                //E->push_back(Enemies());
+                E->push_back(new Enemies());
+                E->back()->initEnm(M->getGridSize(),4,"images/e.png"); //Load enemy image
+                E->back()->placeEnemy(coor1,coor2);
+                int curx = E->back()->getEnemyLoc().x;
+                int cury = E->back()->getEnemyLoc().y;
 
                 vecref.updateVecref(coor1, coor2, ENEMYSYMBOL);//updates the vector units
 
                 //enemycount++;
 
-                cout << E->back().getEnemyLoc().x << " " << E->back().getEnemyLoc().y << endl;
-                cout << E->back().getObjCurrGridLoc().x << " " <<  E->back().getObjCurrGridLoc().y << endl;
-                cout << E->back().getObjOldGridLoc().x << " " <<  E->back().getObjOldGridLoc().y << endl;
-                cout << E->back().getObjCurrRealLoc().x << " " <<  E->back().getObjCurrRealLoc().y << endl;
-                cout << E->back().getObjOldRealLoc().x << " " <<  E->back().getObjOldRealLoc().y << endl;
+                cout << E->back()->getEnemyLoc().x << " " << E->back()->getEnemyLoc().y << endl;
+                cout << E->back()->getObjCurrGridLoc().x << " " <<  E->back()->getObjCurrGridLoc().y << endl;
+                cout << E->back()->getObjOldGridLoc().x << " " <<  E->back()->getObjOldGridLoc().y << endl;
+                cout << E->back()->getObjCurrRealLoc().x << " " <<  E->back()->getObjCurrRealLoc().y << endl;
+                cout << E->back()->getObjOldRealLoc().x << " " <<  E->back()->getObjOldRealLoc().y << endl;
             }
             else{
                 cout << "too many enemies!\n";
@@ -294,7 +300,9 @@ void init(int a)
         else if (comm == "wall"){
             checkBounds(coor1,coor2);
             int maxwall = M->getGridSize();
-            if(W->size() < GWALLLIMIT){
+            //if(W->size() < GWALLLIMIT)
+            if(true)
+                {
 
                 W->push_back(wall());
                 W->back().wallInit(M->getGridSize(),"images/wall.png");// Load walls
@@ -312,6 +320,7 @@ void init(int a)
             }
         }
         else if(comm != "wall" || comm != "arrow" || comm != "enemy" || comm != "player" || comm != "chest"){
+            cout << comm << endl;
             cout << "Invalid command in text file!\n";
             system("pause");
             exit(EXIT_FAILURE);
@@ -331,55 +340,38 @@ void display(void)
 {
   glClear (GL_COLOR_BUFFER_BIT);        // clear display screen
 
-        glPushMatrix();
-         M->drawBackground();
-        glPopMatrix();
+     M->drawBackground();
 
-        if(!menuisopen && !gamewin){
-            for(int i=0; i<W->size();i++)
-            {
-               W->at(i).drawWall();
-            }
+    if(!menuisopen && !gamewin){
+        for(int i=0; i<W->size();i++)
+        {
+           W->at(i).drawWall();
+        }
 
-            glPushMatrix();
-                M->drawGrid();
-            glPopMatrix();
+            M->drawGrid();
 
-            glPushMatrix();
-                P->drawplayer();
-            glPopMatrix();
+            P->drawplayer();
 
-            for(int i=0; i<E->size();i++)
-            {
-                //glPushMatrix();
-                E->at(i).drawEnemy();
-                //glPopMatrix();
-            }
+        for(int i=0; i<E->size();i++)
+        {
+            E->at(i)->drawEnemy();
+        }
 
-            glPushMatrix();
-                P->drawArrow();
-            glPopMatrix();
+            P->drawArrow();
 
-            if (!M->getFoundChest())
-            {
-             glPushMatrix();
-               M->drawChest();
-            glPopMatrix();
-            }
+        if (!M->getFoundChest())
+        {
+           M->drawChest();
+        }
 
-        //if(!canshoot){
         if(!M->getFoundAmmo()){
-            glPushMatrix();
                M->drawArrows();
-            glPopMatrix();
         }
 
     }
     if(gamewin && !menuisopen){
         M->loadBackgroundImage("images/YouWin.png");
-        glPushMatrix();
         M->drawBackground();
-        glPopMatrix();
     }
     if (menuisopen)
     {
@@ -399,70 +391,67 @@ void key(unsigned char key, int x, int y)
             keysPressed.shoot = true;
             plyActs.shoot = true;
             canTakeAction = true;
+            break;
+        case 27 :                       // esc key to exit
+        case 'q':
+            exit(0);
+            break;
+        case 'm':
+            abcKeysPresssedLower['m' - 'a'] = true;
+            break;
+        case '1':
+            abcKeysPresssedLower['1' - '0'] = true;
+            break;
+        case '2':
+            abcKeysPresssedLower['2' - '0'] = true;
+            break;
+        case '3':
+            abcKeysPresssedLower['3' - '0'] = true;
+            break;
+        case '4':
+            abcKeysPresssedLower['4' - '0'] = true;
+            break;
+    }
 
+    glutPostRedisplay();
+}
 
-        break;
+void releaseKey(unsigned char key, int x, int y)
+{
+    switch (key)
+    {
+        case ' ':
+            keysPressed.shoot = false;
+            plyActs.shoot = false;
+            canTakeAction = false;
+            break;
         case 27 :                       // esc key to exit
         case 'q':
             exit(0);
             break;
 
         case 'm':
-            abcKeysPresssedLower['m' - 'a'] = true;
-            if (menuisopen){
-
-                menuisopen=0;
-                //glClear (GL_COLOR_BUFFER_BIT);
-            M->loadBackgroundImage("images/bak.jpg");
-            //glPushMatrix();
-            M->drawBackground();
-            //glPopMatrix();
-                break;
-                }
-            //glClear (GL_COLOR_BUFFER_BIT);
-            M->loadBackgroundImage("images/menu.jpg");
-            //glPushMatrix();
-            M->drawBackground();
-            //glPopMatrix();
-            menuisopen=1;
+            abcKeysPresssedLower['m' - 'a'] = false;
             break;
         case '1':
-            abcKeysPresssedLower['1' - '0'] = true;
-            if (menuisopen){
-                //wallclear(W, wallcount);
-                //enemyclear(E, enemycount);
-                init(0);
-                menuisopen=0;
-            } break;
+            abcKeysPresssedLower['1' - '0'] = false;
+            break;
 
 
         case '2':
-            if (menuisopen){
-                //wallclear(W, wallcount);
-                //enemyclear(E, enemycount);
-                init(1);
-                menuisopen=0;
-            }break;
+            abcKeysPresssedLower['2' - '0'] = false;
+            break;
 
         case '3':
-            if (menuisopen){
-                //wallclear(W, wallcount);
-                //enemyclear(E, enemycount);
-                init(2);
-                menuisopen=0;
-            } break;
+            abcKeysPresssedLower['3' - '0'] = false;
+            break;
 
         case '4':
-            if (menuisopen){
-                //wallclear(W, wallcount);
-                //enemyclear(E, enemycount);
-                init(3);
-                menuisopen=0;
-            } break;
+            abcKeysPresssedLower['4' - '0'] = false;
+            break;
     }
-
-    glutPostRedisplay();
 }
+
 
 void returntomenu(){
     key('m', 0, 0);
@@ -504,50 +493,32 @@ int Print(int Array[]){
 
      morty[0] = vecref.getvecpos(P->getPlayerLoc().x, P->getPlayerLoc().y);
 
+    manageMenu();
 
-    if (keysPressed.moveUp)
+    if (!menuisopen)
     {
-        keysPressed.moveUp = false;
+        managePlayerLogic();
+        manageEnemyLogic();
+        manageProjectileLogic();
+
+        if (canTakeAction)
+        {
+            cout << P->getObjCurrGridLoc().x << " " << P->getObjCurrGridLoc().y << endl;
+            vecref.display2DVec();
+
+        }
+
+        //plyActs = {false, false, false, false, false};
+        //keysPressed = plyActs;
+        //canTakeAction = false;
+        actionInProgress = false;
+
+        cleanEnemyList();
+        cleanPlayerList();
+        cleanProjectileList();
     }
-    if (keysPressed.moveDown)
-    {
-        keysPressed.moveDown = false;
-    }
-    if (keysPressed.moveLeft)
-    {
-        keysPressed.moveLeft = false;
-    }
-    if (keysPressed.moveRight)
-    {
-        keysPressed.moveRight = false;
-    }
-    if (keysPressed.shoot)
-    {
-    }
-
-    managePlayerLogic();
-    manageEnemyLogic();
-    manageProjectileLogic();
-
-    if (canTakeAction)
-    {
-        cout << P->getObjCurrGridLoc().x << " " << P->getObjCurrGridLoc().y << endl;
-        vecref.display2DVec();
-
-    }
-
-    plyActs = {false, false, false, false, false};
-    canTakeAction = false;
-    actionInProgress = false;
-
-    cleanEnemyList();
-    cleanPlayerList();
-    cleanProjectileList();
-
-
     glutPostRedisplay();
 }
-
 
 void mouse(int btn, int state, int x, int y){
 
@@ -597,7 +568,6 @@ void displayloctrack(){ // prints to screen the coordinates of the player and th
 
 //when the enemies move direction up in the vector they temporarly disapear unitl the player takes another action
 //if they are right in front of each other this may cause issues later
-bool annoying = false;
 void Specialkeys(int key, int x, int y)
 {
 
@@ -609,7 +579,6 @@ void Specialkeys(int key, int x, int y)
          keysPressed.moveUp = true;
          plyActs.moveUp = true;
         canTakeAction = true;
-        annoying = false;
     break;
 
     case GLUT_KEY_DOWN:
@@ -637,12 +606,45 @@ void Specialkeys(int key, int x, int y)
   glutPostRedisplay();
 }
 
+void releaseSpecialKeys(int key, int x, int y)
+{
+    switch(key)
+    {
+    case GLUT_KEY_UP:
+         keysPressed.moveUp = false;
+         plyActs.moveUp = false;
+        canTakeAction = false;
+    break;
+
+    case GLUT_KEY_DOWN:
+
+         keysPressed.moveDown = false;
+         plyActs.moveDown = false;
+        canTakeAction = false;
+    break;
+
+    case GLUT_KEY_LEFT:
+
+         keysPressed.moveLeft = false;
+         plyActs.moveLeft = false;
+        canTakeAction = false;
+    break;
+
+    case GLUT_KEY_RIGHT:
+
+         keysPressed.moveRight = false;
+        plyActs.moveRight = false;
+        canTakeAction = false;
+    break;
+
+   }
+}
+
 
 /* Program entry point */
 
 int main(int argc, char *argv[])
 {
-    //cout << "here" << endl;
 
     initGlobalFlags();
 
@@ -654,6 +656,9 @@ int main(int argc, char *argv[])
    glutCreateWindow ("Maze");                    //program title
    init(1);
 
+
+   //void glutKeyboardUpFunc(void (*func)(unsigned char key,int x,int y));
+   //void glutSpecialUpFunc(void (*func)(int key,int x, int y));
 
    /*
    queue < GridLoc > tempRetSolution;
@@ -668,7 +673,9 @@ int main(int argc, char *argv[])
    glutDisplayFunc(display);                     //callback function for display
    glutReshapeFunc(resize);                      //callback for reshape
    glutKeyboardFunc(key);                        //callback function for keyboard
+   glutKeyboardUpFunc(releaseKey);
    glutSpecialFunc(Specialkeys);
+   glutSpecialUpFunc(releaseSpecialKeys);
    glutMouseFunc(mouse);
    glutIdleFunc(idle);
    glutMainLoop();
@@ -721,38 +728,65 @@ void pathFindToPlayer(GridLoc startPos, queue <string> &retPath)
 
 void clearPlayerList()
 {
-    if (P != NULL)
+    if (P != nullptr)
+    {
+        clearProjectileList();
         delete P;
-    P = NULL;
+    }
+    P = nullptr;
 }
 
 void clearEnemyList()
 {
-    if (E != NULL)
+    templateFunctions tFunc;
+
+    if ((E != nullptr))
+    {
+
+        int tCount00 = 0;
+        /*
+        while(E->size() > 0)
+        {
+            cout << "count " << tCount00 << endl;
+            E->pop_back();
+            tCount00++;
+        }
+        */
+
+        tFunc.clearVectorPointerElementPointer(E);
+
+        //E->clear();
         delete E;
-    E = NULL;
+    }
+    E = nullptr;
 }
 
 void clearWallList()
 {
-    if (W != NULL)
+    if (W != nullptr)
+    {
         delete W;
-    W = NULL;
+    }
+    W = nullptr;
 }
 
 void clearProjectileList()
 {
-    if(!P->getIsProjDead())
-        P->setIsProjDead(true);
+    if (P != nullptr)
+    {
+        if(!P->getIsProjDead())
+            P->setIsProjDead(true);
+    }
 }
 
 void cleanPlayerList()
 {
     if(P->getIsObjDead())
     {
-        vecref.updateVecref(P->getObjCurrGridLoc().x, P->getObjCurrGridLoc().y, EMPTYSYMBOL);
         clearProjectileList();
-        clearPlayerList();
+        vecref.updateVecref(P->getObjCurrGridLoc().x, P->getObjCurrGridLoc().y, EMPTYSYMBOL);
+        //clearProjectileList();
+        //clearPlayerList();
         cout << "Player dead exit game" << endl;
         //exit(0); //This is just a placeholder
         menuisopen = true;
@@ -765,15 +799,16 @@ void cleanEnemyList()
     templateFunctions tFunc;
     for (int i = 0; i < E->size(); i++)
     {
-        if (E->at(i).getIsObjDead())
+        if (E->at(i)->getIsObjDead())
         {
-            vecref.updateVecref(E->at(i).getObjNewGridLoc().x, E->at(i).getObjNewGridLoc().y, EMPTYSYMBOL);
-            tFunc.removeVectorPointerElement(E, i);
+            vecref.updateVecref(E->at(i)->getObjNewGridLoc().x, E->at(i)->getObjNewGridLoc().y, EMPTYSYMBOL);
+            tFunc.removeVectorPointerElementPointer(E, i);
             cout << E->size() << endl;
             if(E->size() < 1)
             {
                 gamewin = true;
             }
+            i--;
         }
     }
 }
@@ -788,6 +823,7 @@ void cleanWallList()
             vecref.updateVecref(W->at(i).getObjCurrGridLoc().x, W->at(i).getObjCurrGridLoc().y, EMPTYSYMBOL);
             tFunc.removeVectorPointerElement(W, i);
         }
+        i--;
     }
 }
 
@@ -799,6 +835,7 @@ void cleanProjectileList()
 
 void resetPlayerList()
 {
+    //clearProjectileList();
     clearPlayerList();
     P = new Player();
 }
@@ -806,7 +843,7 @@ void resetPlayerList()
 void resetEnemyList()
 {
     clearEnemyList();
-    E = new vector < Enemies >();
+    E = new vector < Enemies* >();
 }
 
 void resetWallList()
@@ -817,9 +854,9 @@ void resetWallList()
 
 void clearMaze()
 {
-    if (M != NULL)
+    if (M != nullptr)
         delete M;
-    M = NULL;
+    M = nullptr;
 }
 
 void resetMaze()
@@ -884,10 +921,10 @@ void manageEnemyLogic()
 {
     utilityFunctions utilFunc;
 
-    if(!utilFunc.isSameGridLoc(P->getObjCurrGridLoc(), P->getObjOldGridLoc())){//makes it so that the enemy only moves when the player enter a new square
+    if(!utilFunc.isSameGridLoc(P->getObjCurrGridLoc(), P->getObjOldGridLoc()) || (plyActs.shoot && canTakeAction)){//makes it so that the enemy only moves when the player enter a new square
             for (int i = 0; i < E->size(); i++)
             {
-                     E->at(i).setActionStatus(canTakeAction);
+                     E->at(i)->setActionStatus(canTakeAction);
             }
     }
 
@@ -897,30 +934,30 @@ void manageEnemyLogic()
 
         if (canTakeAction)
         {
-            pathFindToPlayer(E->at(i).getObjNewGridLoc(), tempEnemyPath);
-            E->at(i).setObjTravelPath(tempEnemyPath);
+            pathFindToPlayer(E->at(i)->getObjNewGridLoc(), tempEnemyPath);
+            E->at(i)->setObjTravelPath(tempEnemyPath);
         }
 
-        E->at(i).objectAction(vecref, vecref.getvecpos(E->at(i).getEnemyLoc().x, E->at(i).getEnemyLoc().y), morty);
+        E->at(i)->objectAction(vecref, vecref.getvecpos(E->at(i)->getEnemyLoc().x, E->at(i)->getEnemyLoc().y), morty);
 
         bool isBlockedMove;
-        isBlockedMove = !utilFunc.isInGridBounds({M->getGridSize(), M->getGridSize()}, E->at(i).getObjNewGridLoc());
-        if (vecref.vectorMapisWallCollision(E->at(i).getObjNewGridLoc().x, E->at(i).getObjNewGridLoc().y))
+        isBlockedMove = !utilFunc.isInGridBounds({M->getGridSize(), M->getGridSize()}, E->at(i)->getObjNewGridLoc());
+        if (vecref.vectorMapisWallCollision(E->at(i)->getObjNewGridLoc().x, E->at(i)->getObjNewGridLoc().y))
             isBlockedMove = true;
-        if (vecref.vectorMapisPlayerCollision(E->at(i).getObjNewGridLoc().x, E->at(i).getObjNewGridLoc().y))
+        if (vecref.vectorMapisPlayerCollision(E->at(i)->getObjNewGridLoc().x, E->at(i)->getObjNewGridLoc().y))
         {
             isBlockedMove = true;
             P->setIsObjDead(true);
         }
-        if (vecref.vectorMapisEnemyCollision(E->at(i).getObjNewGridLoc().x, E->at(i).getObjNewGridLoc().y))
+        if (vecref.vectorMapisEnemyCollision(E->at(i)->getObjNewGridLoc().x, E->at(i)->getObjNewGridLoc().y))
             isBlockedMove = true;
 
-         E->at(i).objectLogicAction(isBlockedMove);
+         E->at(i)->objectLogicAction(isBlockedMove);
 
-         if (!utilFunc.isSameGridLoc(E->at(i).getObjOldGridLoc(), E->at(i).getObjNewGridLoc()))
+         if (!utilFunc.isSameGridLoc(E->at(i)->getObjOldGridLoc(), E->at(i)->getObjNewGridLoc()))
          {
-             vecref.updateVecref(E->at(i).getObjOldGridLoc().x, E->at(i).getObjOldGridLoc().y, EMPTYSYMBOL);
-             vecref.updateVecref(E->at(i).getObjNewGridLoc().x, E->at(i).getObjNewGridLoc().y, ENEMYSYMBOL);
+             vecref.updateVecref(E->at(i)->getObjOldGridLoc().x, E->at(i)->getObjOldGridLoc().y, EMPTYSYMBOL);
+             vecref.updateVecref(E->at(i)->getObjNewGridLoc().x, E->at(i)->getObjNewGridLoc().y, ENEMYSYMBOL);
          }
     }
 }
@@ -938,12 +975,67 @@ void manageProjectileLogic()
         {
             for (int i = 0; i < E->size(); i++)
             {
-                if (utilFunc.isSameGridLoc(E->at(i).getObjNewGridLoc(), P->getArrowLoc()))
+                if (utilFunc.isSameGridLoc(E->at(i)->getObjNewGridLoc(), P->getArrowLoc()))
                 {
-                    E->at(i).setIsObjDead(true);
+                    E->at(i)->setIsObjDead(true);
                     P->setIsProjDead(true);
                 }
             }
         }
     }
+    plyActs.shoot = false;
+    keysPressed.shoot = false;
 }
+
+void manageMenu()
+{
+
+    if (abcKeysPresssedLower['m' - 'a'])
+    {
+        gamewin = false;
+        if (menuisopen){
+            menuisopen=0;
+            M->loadBackgroundImage("images/bak.jpg");
+        }
+        else
+        {
+            M->loadBackgroundImage("images/menu.jpg");
+            menuisopen=1;
+        }
+        abcKeysPresssedLower['m' - 'a'] = false;
+    }
+    if (menuisopen)
+    {
+        M->loadBackgroundImage("images/menu.jpg");
+        int tempInt;
+        tempInt = '1' - '0';
+        if (abcKeysPresssedLower[tempInt])
+        {
+            init(tempInt);
+            menuisopen=0;
+            abcKeysPresssedLower[tempInt] = false;
+        }
+        tempInt = '2' - '0';
+        if (abcKeysPresssedLower[tempInt])
+        {
+            init(tempInt);
+            menuisopen=0;
+            abcKeysPresssedLower[tempInt] = false;
+        }
+        tempInt = '3' - '0';
+        if (abcKeysPresssedLower[tempInt])
+        {
+            init(tempInt);
+            menuisopen=0;
+            abcKeysPresssedLower[tempInt] = false;
+        }
+        tempInt = '4' - '0';
+        if (abcKeysPresssedLower[tempInt])
+        {
+            init(tempInt);
+            menuisopen=0;
+            abcKeysPresssedLower[tempInt] = false;
+        }
+    }
+}
+

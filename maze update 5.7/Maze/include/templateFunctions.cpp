@@ -193,3 +193,26 @@ void templateFunctions::removeVectorPointerElement(vector <T> *retVec, int inpIn
         retVec->erase(retVec->begin() + inpIndex);
     }
 }
+
+template <class T>
+void templateFunctions::removeVectorPointerElementPointer(vector <T*> *retVec, int inpIndex)
+{
+    if (inpIndex < retVec->size())
+    {
+        delete retVec->at(inpIndex);
+        retVec->at(inpIndex) = nullptr;
+        retVec->erase(retVec->begin() + inpIndex);
+    }
+
+}
+
+template <class T>
+void templateFunctions::clearVectorPointerElementPointer(vector <T*> *retVec)
+{
+    while (!retVec->empty())
+    {
+        delete retVec->back();
+        retVec->back() = nullptr;
+        retVec->pop_back();
+    }
+}
