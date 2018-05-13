@@ -281,11 +281,11 @@ void init(int a)
 
                 //enemycount++;
 
-                cout << E->back()->getEnemyLoc().x << " " << E->back()->getEnemyLoc().y << endl;
-                cout << E->back()->getObjCurrGridLoc().x << " " <<  E->back()->getObjCurrGridLoc().y << endl;
-                cout << E->back()->getObjOldGridLoc().x << " " <<  E->back()->getObjOldGridLoc().y << endl;
-                cout << E->back()->getObjCurrRealLoc().x << " " <<  E->back()->getObjCurrRealLoc().y << endl;
-                cout << E->back()->getObjOldRealLoc().x << " " <<  E->back()->getObjOldRealLoc().y << endl;
+                //cout << E->back()->getEnemyLoc().x << " " << E->back()->getEnemyLoc().y << endl;
+                //cout << E->back()->getObjCurrGridLoc().x << " " <<  E->back()->getObjCurrGridLoc().y << endl;
+                //cout << E->back()->getObjOldGridLoc().x << " " <<  E->back()->getObjOldGridLoc().y << endl;
+                //cout << E->back()->getObjCurrRealLoc().x << " " <<  E->back()->getObjCurrRealLoc().y << endl;
+                //cout << E->back()->getObjOldRealLoc().x << " " <<  E->back()->getObjOldRealLoc().y << endl;
             }
             else{
                 cout << "too many enemies!\n";
@@ -503,8 +503,8 @@ int Print(int Array[]){
 
         if (canTakeAction)
         {
-            cout << P->getObjCurrGridLoc().x << " " << P->getObjCurrGridLoc().y << endl;
-            vecref.display2DVec();
+            //cout << P->getObjCurrGridLoc().x << " " << P->getObjCurrGridLoc().y << endl;
+            //vecref.display2DVec();
 
         }
 
@@ -803,7 +803,7 @@ void cleanEnemyList()
         {
             vecref.updateVecref(E->at(i)->getObjNewGridLoc().x, E->at(i)->getObjNewGridLoc().y, EMPTYSYMBOL);
             tFunc.removeVectorPointerElementPointer(E, i);
-            cout << E->size() << endl;
+            //cout << E->size() << endl;
             if(E->size() < 1)
             {
                 gamewin = true;

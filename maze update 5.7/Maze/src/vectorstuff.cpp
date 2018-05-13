@@ -329,11 +329,16 @@ void vectorstuff::convertQueueGLtoString(queue<GridLoc>inpQueue, queue<string>& 
     string tempStr;
     GridLoc tempGridLoc;
 
-    tempGridLoc = inpQueue.front();
-    inpQueue.pop();
+    if (!inpQueue.empty())
+    {
+        tempGridLoc = inpQueue.front();
+        inpQueue.pop();
+    }
     while (!inpQueue.empty())
     {
 
+        //cout << inpQueue.front().x << endl;
+        //cout << tempGridLoc.x << endl;
         if (inpQueue.front().x - tempGridLoc.x < 0)
             tempStr = "left";
         else if (inpQueue.front().x - tempGridLoc.x > 0)
