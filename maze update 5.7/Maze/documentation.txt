@@ -32,3 +32,18 @@ To make custom map: Open a text file
 		arrows x y
 	file name should be saved as 
 	mapgen.txt
+	mapgen1.txt
+	mapgen2.txt
+	mapgen3.txt
+
+	asciiMapToCoordinateList.cpp converts an ascii map to a coordinate list
+		to help visually create a map
+	compiled using c++11
+	character list
+
+	empty = '_';
+	wall = '#';
+	enemy = 'e';
+	player = 'p';
+	chest = 'c';
+	ammo = 'a';
