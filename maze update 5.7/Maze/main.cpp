@@ -194,7 +194,7 @@ void init(int a)
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
 
-    string level[4] = {"mapgen.txt","mapgen2.txt","mapgen3.txt","mapgen4.txt"};
+    string level[4] = {"maps/mapgen.txt","maps/mapgen2.txt","maps/mapgen3.txt","maps/mapgen4.txt"};
 
     M->loadBackgroundImage("images/bak.jpg");           // Load maze background image
     ifstream bob;//AS initializes a file called bob

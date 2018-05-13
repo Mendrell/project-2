@@ -1,0 +1,34 @@
+Project 2 by
+Andrew Schroepfer
+Norman Mamani
+
+Project goal: Create a 2d game 
+	implementing Dyjkstras search
+	algorithm.
+
+Player Movement : arrow keys up, down
+	left, and right move the player
+	respectively.
+
+Shoot : press space to shoot must first
+	pick up arrows.
+
+Win Condition : Get to the chest and 
+	either kill or avoid enemies.
+
+Menu: Press 'm' to open the menu level
+	1, 2, 3, 4 handle level select
+	'esc' will exit the game.
+
+To make custom map: Open a text file
+	First line must set grid size
+		grid 10 0
+	add walls and enemies.
+		wall x y
+		enemy x y
+	add 1 player 1 chest 1 arrows
+		player x y
+		chest x y
+		arrows x y
+	file name should be saved as 
+	mapgen.txt
